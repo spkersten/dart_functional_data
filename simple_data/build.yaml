@@ -1,0 +1,25 @@
+targets:
+  $default:
+    builders:
+#      simple_data|simple_data:
+#        enabled: true
+      functional_data|functional_data:
+        enabled: true
+
+builders:
+#  simple_data:
+#    target: ":simple_data"
+#    import: "package:simple_data/builder.dart"
+#    builder_factories: ["simpleData"]
+#    build_extensions: {".dart": [".simple_data.g.part"]}
+#    auto_apply: dependents
+#    build_to: cache
+#    applies_builders: ["source_gen|combining_builder"]
+  functional_data:
+    target: ":functional_data"
+    import: "package:simple_data/builder2.dart"
+    builder_factories: ["functionalData"]
+    build_extensions: {".dart": [".functional_data.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
