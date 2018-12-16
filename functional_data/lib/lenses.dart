@@ -65,5 +65,11 @@ class Optional<T> {
 
   const Optional(this.raw);
 
+  const Optional.none() : raw = null;
+
   bool get hasValue => raw != null;
+
+  Optional<R> map<R>(R Function(T) f) => Optional<R>(raw != null ? f(raw) : null);
+
+  T valueOr(T fallback) => raw != null ? raw : fallback;
 }
