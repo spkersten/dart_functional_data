@@ -35,17 +35,17 @@ class CustomEquality {
 }
 
 String _getCustomEquality(List<ElementAnnotation> annotations) {
-  print(annotations.toString());
   final annotation =
       annotations.firstWhere((a) => a.computeConstantValue().type.name == "CustomEquality", orElse: () => null);
   if (annotation != null) {
     final source = annotation.toSource();
     return source.substring("@CustomEquality(".length, source.length - 1);
-  }
+  } else
+    return null;
 }
 
 String _generateDataType(Element element) {
-  if (element is! ClassElement) throw new Exception('SimpleData annotation must only be used on classes');
+  if (element is! ClassElement) throw new Exception('FunctionalData annotation must only be used on classes');
 
   final className = element.name.replaceAll('\$', '');
 
@@ -63,7 +63,7 @@ String _generateDataType(Element element) {
       ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && ')};';
 
   final hash =
-      '@override int get hashCode { var result = 0; ${fields.map((f) => 'result = Jenkins.combine(result, ${_generateHash(f)});').join()} return Jenkins.finish(result); }';
+      '@override int get hashCode { var result = 17; ${fields.map((f) => 'result = 37 * result + ${_generateHash(f)};').join()} return result; }';
 
   final lenses = fields.map((f) {
     final name = f.name;
