@@ -41,11 +41,13 @@ void main() {
   final bar = Bar(foo: foo, foos: [Foo(number: 101, name: "One"), Foo(number: 102, name: "Two")], driver: "One");
 
   final fooName = Bar$.foo.then(Foo$.name);
-  print(fooName.map((name) => name.toUpperCase(), bar));
+  // print(fooName.map((name) => name.toUpperCase(), bar));
+  print(fooName.of(bar).map((name) => name.toUpperCase()));
   // Bar(foo: Foo(number: 42, name: MARVIN), foos: [Foo(number: 101, name: One), Foo(number: 102, name: Two)], driver: One)
 
   final firstFooName = Bar$.foos.then(List$.atIndex<Foo>(0)).then(Foo$.name);
-  print(firstFooName.update(bar, "Twee"));
+  // print(firstFooName.update(bar, "Twee"));
+  print(firstFooName.of(bar).update("Twee"));
   // Bar(foo: Foo(number: 42, name: Marvin), foos: [Foo(number: 101, name: Twee), Foo(number: 102, name: Two)], driver: One)
 
   final fooNamedTwo = Bar$.foos.then(List$.where<Foo>((foo) => foo.name == "Two")).then(Foo$.name);
@@ -54,8 +56,7 @@ void main() {
 
   final driversNumber =
       Bar$.foos.thenWithContext((bar) => List$.where<Foo>((foo) => foo.name == bar.driver).then(Foo$.number));
-  print(driversNumber.get(bar));
+  print(driversNumber.of(bar).value);
   // 101
 }
-
 ```
