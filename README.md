@@ -6,8 +6,8 @@ It generates `operator==`, `hashCode`, `copyWith`, `toString`, as well as lenses
 
 Example:
 
-```
-# lens.dart
+```dart
+// lens.dart
 import 'package:collection/collection.dart';
 
 import 'package:functional_data/functional_data.dart';
