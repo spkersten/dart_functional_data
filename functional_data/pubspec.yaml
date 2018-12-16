@@ -1,0 +1,16 @@
+name: functional_data
+version: 0.1.0
+description: functional_data
+authors:
+  - Sander Kersten <spkersten@gmail.com>
+
+environment:
+  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+
+dependencies:
+  meta:
+
+dev_dependencies:
+  functional_data_generator:
+    path: ../functional_data_generator
+

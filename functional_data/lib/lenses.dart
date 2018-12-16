@@ -1,4 +1,4 @@
-
+import 'package:meta/meta.dart';
 
 typedef Getter<S, T> = T Function(S);
 typedef Updater<S, T> = S Function(S, T);
@@ -59,6 +59,7 @@ class List$ {
   );
 }
 
+@immutable
 class Optional<T> {
   final T raw;
 

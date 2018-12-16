@@ -1,10 +1,8 @@
-library simple_data;
+library functional_data;
 
 import 'package:collection/collection.dart';
 
 export 'lenses.dart';
-
-class SimpleData { const SimpleData(); }
 
 class FunctionalData { const FunctionalData(); }
 

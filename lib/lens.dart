@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import 'package:simple_data/simple_data.dart';
+import 'package:functional_data/functional_data.dart';
 
 part 'lens.g.dart';
 
@@ -14,33 +14,6 @@ class Foo with $Foo {
   // Can't be const because of mixin
   Foo({this.number, this.name});
 }
-
-// BUILDER2 WILL GENERATE:
-//
-//abstract class $Foo {
-//  int get number;
-//
-//  String get name;
-//
-//  Foo copyWith({int number, String name}) => Foo(number: number ?? this.number, name: name ?? this.name);
-//
-//  String toString() => "Foo(number: $number, name: $name)";
-//
-//  bool operator ==(dynamic other) => other.runtimeType == runtimeType && number == other.number && name == other.name;
-//
-//  @override
-//  int get hashCode {
-//    var result = 0;
-//    result = Jenkins.combine(result, number.hashCode);
-//    result = Jenkins.combine(result, name.hashCode);
-//    return Jenkins.finish(result);
-//  }
-//}
-//
-//class Foo$ {
-//  static final number = Lens<Foo, int>((s_) => s_.number, (s_, number) => s_.copyWith(number: number));
-//  static final name = Lens<Foo, String>((s_) => s_.name, (s_, name) => s_.copyWith(name: name));
-//}
 
 @FunctionalData()
 class Bar with $Bar {
@@ -77,33 +50,7 @@ class LensExample extends StatelessWidget {
     print(driversNumber.get(bar));
     // 101
 
-    final a = A();
-    print("hh: ${a.hashCode}  ${a.copyWith(foo: 55)}");
 
     return Center(child: Container(child: Text("x")));
   }
 }
-
-// ALTERNATIVE FOR BUILDER
-//
-//@SimpleData()
-//abstract class $Foo {
-//  int get number;
-//
-//  String get name;
-//
-//  const $Foo();
-//}
-//
-//
-//@SimpleData()
-//abstract class $Bar {
-//  $Foo get foo;
-//
-//  @CustomEquality(DeepCollectionEquality())
-//  List<$Foo> get foos;
-//
-//  String get driver;
-//
-//  const $Bar();
-//}
