@@ -1,0 +1,14 @@
+name: example
+description: example of functional data
+
+environment:
+  sdk: '>=2.1.0 <3.0.0'
+
+dependencies:
+  functional_data:
+    path: ../functional_data
+
+dev_dependencies:
+  build_runner:
+  functional_data_generator:
+    path: ../functional_data_generator
