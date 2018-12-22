@@ -3,14 +3,16 @@ version: 0.1.0
 description: functional_data_generator
 authors:
   - Sander Kersten <spkersten@gmail.com>
+homepage: https://github.com/spkersten/dart_functional_data
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
-  analyzer:
-  build:
-  source_gen:
+  analyzer: ^0.34.0
+  build: ^1.0.2
+  source_gen: ^0.9.2
+  collection: ^1.14.11
 
 dev_dependencies:
   build_runner:

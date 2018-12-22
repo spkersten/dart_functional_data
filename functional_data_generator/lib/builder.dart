@@ -3,9 +3,10 @@ import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
 
-Builder functionalData(BuilderOptions options) => new SharedPartBuilder([new SimpleDataGenerator()], 'simple_data');
+Builder functionalData(BuilderOptions options) =>
+    new SharedPartBuilder([new FunctionalDataGenerator()], 'functional_data');
 
-class SimpleDataGenerator extends Generator {
+class FunctionalDataGenerator extends Generator {
   @override
   Future<String> generate(LibraryReader library, BuildStep buildStep) async {
     final output = StringBuffer();
