@@ -72,7 +72,9 @@ String _generateDataType(Element element) {
     return 'static final $name = Lens<$className, $type>((s_) => s_.$name, (s_, $name) => s_.copyWith($name: $name));';
   });
 
-  final dataClass = 'abstract class \$$className { ${fieldDeclarations.join()} $copyWith $toString $equality $hash }';
+  final constructor = 'const \$$className();';
+
+  final dataClass = 'abstract class \$$className { ${fieldDeclarations.join()} $constructor $copyWith $toString $equality $hash }';
   final lensesClass = 'class $className\$ { ${lenses.join()} }';
 
   return '$dataClass $lensesClass';
