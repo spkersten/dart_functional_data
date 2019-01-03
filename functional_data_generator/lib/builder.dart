@@ -52,7 +52,9 @@ String _generateDataType(Element element) {
 
   final classElement = element as ClassElement;
 
-  final fields = classElement.fields.map((f) => Field(f.name, f.type.toString(), _getCustomEquality(f.metadata)));
+  final fields = classElement.fields
+      .where((f) => !f.isSynthetic)
+      .map((f) => Field(f.name, f.type.toString(), _getCustomEquality(f.metadata)));
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString = 'String toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
@@ -74,7 +76,8 @@ String _generateDataType(Element element) {
 
   final constructor = 'const \$$className();';
 
-  final dataClass = 'abstract class \$$className { ${fieldDeclarations.join()} $constructor $copyWith $toString $equality $hash }';
+  final dataClass =
+      'abstract class \$$className { ${fieldDeclarations.join()} $constructor $copyWith $toString $equality $hash }';
   final lensesClass = 'class $className\$ { ${lenses.join()} }';
 
   return '$dataClass $lensesClass';
