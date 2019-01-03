@@ -5,16 +5,18 @@ part 'main.g.dart';
 
 // Only requirement is that it has a constructor with named arguments for all fields
 @FunctionalData()
-class Foo with $Foo {
+class Foo extends $Foo {
   final int number;
   final String name;
+
+  String get displayString => "$name[$number]";
 
   // Can't be const because of mixin
   Foo({this.number, this.name});
 }
 
 @FunctionalData()
-class Bar with $Bar {
+class Bar extends $Bar {
   final Foo foo;
 
   @CustomEquality(DeepCollectionEquality())

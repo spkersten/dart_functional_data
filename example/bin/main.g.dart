@@ -3,12 +3,13 @@
 part of 'main.dart';
 
 // **************************************************************************
-// SimpleDataGenerator
+// FunctionalDataGenerator
 // **************************************************************************
 
 abstract class $Foo {
   int get number;
   String get name;
+  const $Foo();
   Foo copyWith({int number, String name}) =>
       Foo(number: number ?? this.number, name: name ?? this.name);
   String toString() => "Foo(number: $number, name: $name)";
@@ -36,6 +37,7 @@ abstract class $Bar {
   Foo get foo;
   List<Foo> get foos;
   String get driver;
+  const $Bar();
   Bar copyWith({Foo foo, List<Foo> foos, String driver}) => Bar(
       foo: foo ?? this.foo,
       foos: foos ?? this.foos,
