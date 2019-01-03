@@ -11,8 +11,7 @@ class Foo extends $Foo {
 
   String get displayString => "$name[$number]";
 
-  // Can't be const because of mixin
-  Foo({this.number, this.name});
+  const Foo({this.number, this.name});
 }
 
 @FunctionalData()
@@ -24,7 +23,7 @@ class Bar extends $Bar {
 
   final String driver;
 
-  Bar({this.foo, this.foos, this.driver});
+  const Bar({this.foo, this.foos, this.driver});
 }
 
 main(List<String> arguments) {
