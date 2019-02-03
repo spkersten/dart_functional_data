@@ -2,26 +2,15 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:functional_data/functional_data.dart';
 
 Builder functionalData(BuilderOptions options) =>
     new SharedPartBuilder([new FunctionalDataGenerator()], 'functional_data');
 
-class FunctionalDataGenerator extends Generator {
+class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
-  Future<String> generate(LibraryReader library, BuildStep buildStep) async {
-    final output = StringBuffer();
-
-    for (final element in library.allElements) {
-      try {
-        if (elementHasMetaAnnotation(element)) {
-          output.write(_generateDataType(element));
-        }
-      } catch (e, s) {
-        log.severe('Data type generation failed for ${element.name}. $s', e, s);
-      }
-    }
-
-    return output.toString();
+  generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) {
+    return _generateDataType(element);
   }
 }
 
