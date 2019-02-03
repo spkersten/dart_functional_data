@@ -106,8 +106,7 @@ class Foo with $Foo {
   final int number;
   final String name;
 
-  // Can't be const because of mixin
-  Foo({this.number, this.name});
+  const Foo({this.number, this.name});
 }
 
 @FunctionalData()
@@ -119,7 +118,7 @@ class Bar with $Bar {
 
   final String driver;
 
-  Bar({this.foo, this.foos, this.driver});
+  const Bar({this.foo, this.foos, this.driver});
 }
 
 void main() {
