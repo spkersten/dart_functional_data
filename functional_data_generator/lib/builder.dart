@@ -9,14 +9,17 @@ Builder functionalData(BuilderOptions options) =>
 
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
-  generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) {
+  generateForAnnotatedElement(
+      Element element, ConstantReader annotation, BuildStep buildStep) {
     return _generateDataType(element);
   }
 }
 
-bool elementHasMetaAnnotation(Element e) => e.metadata.any(isSimpleDataAnnotation);
+bool elementHasMetaAnnotation(Element e) =>
+    e.metadata.any(isSimpleDataAnnotation);
 
-bool isSimpleDataAnnotation(ElementAnnotation a) => a.computeConstantValue().type.name.toString() == "FunctionalData";
+bool isSimpleDataAnnotation(ElementAnnotation a) =>
+    a.computeConstantValue().type.name.toString() == "FunctionalData";
 
 class CustomEquality {
   final Equality equality;
@@ -25,8 +28,9 @@ class CustomEquality {
 }
 
 String _getCustomEquality(List<ElementAnnotation> annotations) {
-  final annotation =
-      annotations.firstWhere((a) => a.computeConstantValue().type.name == "CustomEquality", orElse: () => null);
+  final annotation = annotations.firstWhere(
+      (a) => a.computeConstantValue().type.name == "CustomEquality",
+      orElse: () => null);
   if (annotation != null) {
     final source = annotation.toSource();
     return source.substring("@CustomEquality(".length, source.length - 1);
@@ -35,18 +39,20 @@ String _getCustomEquality(List<ElementAnnotation> annotations) {
 }
 
 String _generateDataType(Element element) {
-  if (element is! ClassElement) throw new Exception('FunctionalData annotation must only be used on classes');
+  if (element is! ClassElement)
+    throw new Exception(
+        'FunctionalData annotation must only be used on classes');
 
   final className = element.name.replaceAll('\$', '');
 
   final classElement = element as ClassElement;
 
-  final fields = classElement.fields
-      .where((f) => !f.isSynthetic)
-      .map((f) => Field(f.name, f.type.toString(), _getCustomEquality(f.metadata)));
+  final fields = classElement.fields.where((f) => !f.isSynthetic).map(
+      (f) => Field(f.name, f.type.toString(), _getCustomEquality(f.metadata)));
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
-  final toString = 'String toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
+  final toString =
+      'String toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
   final copyWith =
       '$className copyWith({${fields.map((f) => '${f.type} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', ')});';
 

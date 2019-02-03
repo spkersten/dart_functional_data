@@ -32,7 +32,8 @@ class Lens<S, T> {
   ///  print(driversNumber.of(bar).value);
   ///  // 101
   /// ```
-  Lens<S, Q> thenWithContext<Q>(Lens<T, Q> Function(S context) lensMaker) => Lens<S, Q>(
+  Lens<S, Q> thenWithContext<Q>(Lens<T, Q> Function(S context) lensMaker) =>
+      Lens<S, Q>(
         (s) => lensMaker(s).get(get(s)),
         (s, q) => update(s, lensMaker(s).update(get(s), q)),
       );
@@ -60,7 +61,8 @@ class FocusedLens<S, T> {
   /// Chain two lenses together.
   ///
   /// For example, `FooLens.bar.of(foo).then(BarLens.name)`, is equivalent to `foo.bar.name`.
-  FocusedLens<S, Q> then<Q>(Lens<T, Q> lens) => FocusedLens<S, Q>._(_subject, _lens.then(lens));
+  FocusedLens<S, Q> then<Q>(Lens<T, Q> lens) =>
+      FocusedLens<S, Q>._(_subject, _lens.then(lens));
 
   /// Chain two lenses together.
   ///
@@ -73,7 +75,8 @@ class FocusedLens<S, T> {
   ///  print(driversNumber.value);
   ///  // 101
   /// ```
-  FocusedLens<S, Q> thenWithContext<Q>(Lens<T, Q> Function(S context) lensMaker) =>
+  FocusedLens<S, Q> thenWithContext<Q>(
+          Lens<T, Q> Function(S context) lensMaker) =>
       FocusedLens<S, Q>._(_subject, _lens.thenWithContext(lensMaker));
 
   /// The value to lens is focused on
@@ -101,7 +104,8 @@ class List$ {
 
   static Lens<List<T>, T> first<T>() => atIndex(0);
 
-  static Lens<List<T>, T> where<T>(bool Function(T) predicate) => Lens<List<T>, T>(
+  static Lens<List<T>, T> where<T>(bool Function(T) predicate) =>
+      Lens<List<T>, T>(
         (s) => s.firstWhere(predicate),
         (s, t) {
           final index = s.indexWhere(predicate);
@@ -111,7 +115,9 @@ class List$ {
         },
       );
 
-  static Lens<List<T>, Optional<T>> whereOptional<T>(bool Function(T) predicate) => Lens<List<T>, Optional<T>>(
+  static Lens<List<T>, Optional<T>> whereOptional<T>(
+          bool Function(T) predicate) =>
+      Lens<List<T>, Optional<T>>(
         (s) => Optional<T>(s.firstWhere(predicate, orElse: () => null)),
         (s, t) {
           if (!t.hasValue) return s;
@@ -133,7 +139,8 @@ class Optional<T> {
 
   bool get hasValue => raw != null;
 
-  Optional<R> map<R>(R Function(T) f) => Optional<R>(raw != null ? f(raw) : null);
+  Optional<R> map<R>(R Function(T) f) =>
+      Optional<R>(raw != null ? f(raw) : null);
 
   T valueOr(T fallback) => raw != null ? raw : fallback;
 }
