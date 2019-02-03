@@ -25,6 +25,21 @@ class Person extends $Person {
 Because of this design, you have complete control over the class. You can, for example, add named constructors
 or methods to the class like you're used to.
 
+## Using
+
+To use functional_data, add the following dependencies to your package:
+
+```yaml
+dependencies:
+  functional_data:
+
+dev_dependencies:
+  build_runner:
+  functional_data_generator:
+```
+
+And run `flutter packages pub run build_runner build lib` to generate code.
+
 ## Lenses
 
 For every class, lenses are generated for all fields which allow viewing a field or creating a new

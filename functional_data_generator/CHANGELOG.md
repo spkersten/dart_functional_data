@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Add link to documentation of `function_data` package in README
+
 ## 0.2.1
 
 - Add changelog
