@@ -23,7 +23,10 @@ class Bar extends $Bar {
 
   final String driver;
 
-  const Bar({this.foo, this.foos, this.driver});
+  @CustomEquality(Ignore())
+  final String cache;
+
+  const Bar({this.foo, this.foos, this.driver, this.cache = null});
 }
 
 main(List<String> arguments) {
