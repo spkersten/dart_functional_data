@@ -10,9 +10,8 @@ Builder functionalData(BuilderOptions options) =>
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
   generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) {
-    return _generateDataType(element);
-  }
+          Element element, ConstantReader annotation, BuildStep buildStep) =>
+      _generateDataType(element);
 }
 
 bool elementHasMetaAnnotation(Element e) =>
@@ -43,12 +42,19 @@ String _generateDataType(Element element) {
     throw new Exception(
         'FunctionalData annotation must only be used on classes');
 
+  final prefixes = Map.fromEntries(element.library.imports
+      .where((import) => import.prefix != null)
+      .map(
+          (import) => MapEntry(import.importedLibrary.toString(), import.prefix.name)));
+
   final className = element.name.replaceAll('\$', '');
 
   final classElement = element as ClassElement;
 
-  final fields = classElement.fields.where((f) => !f.isSynthetic).map(
-      (f) => Field(f.name, f.type.toString(), _getCustomEquality(f.metadata)));
+  final fields = classElement.fields.where((f) => !f.isSynthetic).map((f) {
+    return Field(f.name, prefixes[f.type.element.library.toString()], f.type.toString(),
+          _getCustomEquality(f.metadata));
+  });
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString =
@@ -96,8 +102,12 @@ String _generateHash(Field f) {
 
 class Field {
   final String name;
-  final String type;
+  final String prefix;
+  String get type => prefix == null ? _type : "$prefix.$_type";
   final String customEquality;
 
-  const Field(this.name, this.type, this.customEquality);
+  const Field(this.name, this.prefix, String type, this.customEquality)
+      : _type = type;
+
+  final String _type;
 }

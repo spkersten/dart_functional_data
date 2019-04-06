@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:functional_data/functional_data.dart';
+import 'dart:math' as math;
 
 part 'main.g.dart';
 
@@ -27,6 +28,12 @@ class Bar extends $Bar {
   final String cache;
 
   const Bar({this.foo, this.foos, this.driver, this.cache = null});
+}
+
+@FunctionalData()
+class Baz extends $Baz {
+  final math.Point prefixedField;
+  const Baz({this.prefixedField});
 }
 
 main(List<String> arguments) {
