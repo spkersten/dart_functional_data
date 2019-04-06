@@ -1,3 +1,7 @@
+## 0.2.3
+
+- Support types from prefixed imports
+
 ## 0.2.2
 
 - Add link to documentation of `function_data` package in README
