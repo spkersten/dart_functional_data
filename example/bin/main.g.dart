@@ -73,3 +73,25 @@ class Bar$ {
   static final cache = Lens<Bar, String>(
       (s_) => s_.cache, (s_, cache) => s_.copyWith(cache: cache));
 }
+
+abstract class $Baz {
+  math.Point<num> get prefixedField;
+  const $Baz();
+  Baz copyWith({math.Point<num> prefixedField}) =>
+      Baz(prefixedField: prefixedField ?? this.prefixedField);
+  String toString() => "Baz(prefixedField: $prefixedField)";
+  bool operator ==(dynamic other) =>
+      other.runtimeType == runtimeType && prefixedField == other.prefixedField;
+  @override
+  int get hashCode {
+    var result = 17;
+    result = 37 * result + prefixedField.hashCode;
+    return result;
+  }
+}
+
+class Baz$ {
+  static final prefixedField = Lens<Baz, math.Point<num>>(
+      (s_) => s_.prefixedField,
+      (s_, prefixedField) => s_.copyWith(prefixedField: prefixedField));
+}
