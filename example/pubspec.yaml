@@ -10,3 +10,4 @@ dependencies:
 dev_dependencies:
   build_runner:
   functional_data_generator:
+    path: ../functional_data_generator
