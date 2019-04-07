@@ -1,3 +1,7 @@
+## 0.2.4
+
+- Relax version dependency on analyzer
+
 ## 0.2.3
 
 - Support types from prefixed imports
