@@ -14,9 +14,9 @@ class Person extends $Person {
   final String name;
   final int age;
   
-  Person({this.name, this.age});
+  const Person({this.name, this.age});
   
-  Person.anonymous() : this(name: "John Doe", age: null);
+  const Person.anonymous() : this(name: "John Doe", age: null);
   
   int get ageInDays => 356 * age;
 }
@@ -68,7 +68,7 @@ class Course extends $Course {
   final String name;
   final List<Person> students;
   
-  Course({this.students});
+  const Course({this.students});
 }
 
 final programming = Course(name: "Programming 101", students: [Person(name: "Jane", age: 21), Person(name: "Tom", age: 20)]);
@@ -102,7 +102,7 @@ part 'lens.g.dart';
 
 // Only requirement is that it has a constructor with named arguments for all fields
 @FunctionalData()
-class Foo with $Foo {
+class Foo extends $Foo {
   final int number;
   final String name;
 
@@ -110,7 +110,7 @@ class Foo with $Foo {
 }
 
 @FunctionalData()
-class Bar with $Bar {
+class Bar extends $Bar {
   final Foo foo;
 
   @CustomEquality(DeepCollectionEquality())

@@ -19,6 +19,8 @@ class Foo extends $Foo {
 class Bar extends $Bar {
   final Foo foo;
 
+  static const int constant = 5;
+
   @CustomEquality(DeepCollectionEquality())
   final List<Foo> foos;
 
