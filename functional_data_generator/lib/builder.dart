@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
@@ -52,7 +53,7 @@ String _generateDataType(Element element) {
   final classElement = element as ClassElement;
 
   final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
-    return Field(f.name, prefixes[f.type.element.library.toString()], f.type.toString(),
+    return Field(f.name, prefixes[f.type.element.library.toString()], _typeAsCode(f.type),
           _getCustomEquality(f.metadata));
   });
 
@@ -82,6 +83,19 @@ String _generateDataType(Element element) {
   final lensesClass = 'class $className\$ { ${lenses.join()} }';
 
   return '$dataClass $lensesClass';
+}
+
+String _typeAsCode(DartType type) {
+  if (type is FunctionType) {
+    final positionArgs = type.parameters.where((p) => p.isPositional).map((p) => _typeAsCode(p.type)).join(', ');
+    final namedArgs = type.parameters.where((p) => p.isNamed).map((p) => '${_typeAsCode(p.type)} ${p.name}').join(', ');
+
+    final parameters = namedArgs.isEmpty ? positionArgs : positionArgs + ', {$namedArgs}';
+
+    return '${_typeAsCode(type.returnType)} Function($parameters)';
+  } else {
+    return type.displayName;
+  }
 }
 
 String _generateEquality(Field f) {
