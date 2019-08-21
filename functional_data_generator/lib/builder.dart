@@ -1,5 +1,5 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
@@ -43,18 +43,14 @@ String _generateDataType(Element element) {
     throw new Exception(
         'FunctionalData annotation must only be used on classes');
 
-  final prefixes = Map.fromEntries(element.library.imports
-      .where((import) => import.prefix != null)
-      .map(
-          (import) => MapEntry(import.importedLibrary.toString(), import.prefix.name)));
-
   final className = element.name.replaceAll('\$', '');
 
   final classElement = element as ClassElement;
 
-  final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
-    return Field(f.name, prefixes[f.type.element.library.toString()], _typeAsCode(f.type),
-          _getCustomEquality(f.metadata));
+  final fields =
+      classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
+    return Field(
+        f.name, _typeAsCode(_findTypeNode(f)), _getCustomEquality(f.metadata));
   });
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
@@ -85,17 +81,20 @@ String _generateDataType(Element element) {
   return '$dataClass $lensesClass';
 }
 
-String _typeAsCode(DartType type) {
-  if (type is FunctionType) {
-    final positionArgs = type.parameters.where((p) => p.isPositional).map((p) => _typeAsCode(p.type)).join(', ');
-    final namedArgs = type.parameters.where((p) => p.isNamed).map((p) => '${_typeAsCode(p.type)} ${p.name}').join(', ');
+TypeAnnotation _findTypeNode(FieldElement element) {
+  final parsedLibrary =
+      element.session.getParsedLibraryByElement(element.library);
+  final declaration = parsedLibrary.getElementDeclaration(element);
+  return ((declaration.node as VariableDeclaration).parent
+          as VariableDeclarationList)
+      .type;
+}
 
-    final parameters = namedArgs.isEmpty ? positionArgs : positionArgs + ', {$namedArgs}';
-
-    return '${_typeAsCode(type.returnType)} Function($parameters)';
-  } else {
-    return type.displayName;
+String _typeAsCode(TypeAnnotation type) {
+  if (type == null) {
+    return 'dynamic';
   }
+  return type.toString();
 }
 
 String _generateEquality(Field f) {
@@ -116,12 +115,8 @@ String _generateHash(Field f) {
 
 class Field {
   final String name;
-  final String prefix;
-  String get type => prefix == null ? _type : "$prefix.$_type";
+  final String type;
   final String customEquality;
 
-  const Field(this.name, this.prefix, String type, this.customEquality)
-      : _type = type;
-
-  final String _type;
+  const Field(this.name, this.type, this.customEquality);
 }
