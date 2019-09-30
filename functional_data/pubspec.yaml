@@ -7,8 +7,8 @@ authors:
 homepage: https://github.com/spkersten/dart_functional_data
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.4.0 <3.0.0"
 
 dependencies:
-  meta: ^1.1.6
-  collection: ^1.14.11
+  meta: ^1.1.7
+  collection: ^1.14.12
