@@ -125,6 +125,7 @@ class List$ {
           if (index < 0) return s;
           final newS = List<T>.from(s);
           newS.replaceRange(index, index + 1, [t.raw]);
+          return newS;
         },
       );
 }
