@@ -1,3 +1,7 @@
+## 0.3.2
+
+- Fix some warnings in generated code
+
 ## 0.3.1
 
 - Fix bug where code generation fails for field of Function type

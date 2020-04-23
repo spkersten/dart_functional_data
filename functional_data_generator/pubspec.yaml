@@ -1,5 +1,5 @@
 name: functional_data_generator
-version: 0.3.1
+version: 0.3.2
 description: >-
   Simple and non-intrusive code generator for boilerplate of data types.
 authors:

@@ -33,7 +33,7 @@ String _getCustomEquality(List<ElementAnnotation> annotations) {
       orElse: () => null);
   if (annotation != null) {
     final source = annotation.toSource();
-    return source.substring("@CustomEquality(".length, source.length - 1);
+    return 'const ' + source.substring("@CustomEquality(".length, source.length - 1);
   } else
     return null;
 }
@@ -79,7 +79,7 @@ String _generateDataType(Element element) {
   final constructor = 'const \$$className();';
 
   final dataClass =
-      'abstract class \$$className { ${fieldDeclarations.join()} $constructor $copyWith $toString $equality $hash }';
+      'abstract class \$$className { $constructor ${fieldDeclarations.join()} $copyWith $toString $equality $hash }';
   final lensesClass = 'class $className\$ { ${lenses.join()} }';
 
   final warningSuppressions = '''

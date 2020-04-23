@@ -11,10 +11,10 @@ part of 'main.dart';
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Foo {
+  const $Foo();
   int get number;
   String get name;
   Enum get enu;
-  const $Foo();
   Foo copyWith({int number, String name, Enum enu}) => Foo(
       number: number ?? this.number,
       name: name ?? this.name,
@@ -51,11 +51,11 @@ class Foo$ {
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Bar {
+  const $Bar();
   Foo get foo;
   List<Foo> get foos;
   String get driver;
   String get cache;
-  const $Bar();
   Bar copyWith({Foo foo, List<Foo> foos, String driver, String cache}) => Bar(
       foo: foo ?? this.foo,
       foos: foos ?? this.foos,
@@ -68,16 +68,16 @@ abstract class $Bar {
   bool operator ==(dynamic other) =>
       other.runtimeType == runtimeType &&
       foo == other.foo &&
-      DeepCollectionEquality().equals(foos, other.foos) &&
+      const DeepCollectionEquality().equals(foos, other.foos) &&
       driver == other.driver &&
-      Ignore().equals(cache, other.cache);
+      const Ignore().equals(cache, other.cache);
   @override
   int get hashCode {
     var result = 17;
     result = 37 * result + foo.hashCode;
-    result = 37 * result + DeepCollectionEquality().hash(foos);
+    result = 37 * result + const DeepCollectionEquality().hash(foos);
     result = 37 * result + driver.hashCode;
-    result = 37 * result + Ignore().hash(cache);
+    result = 37 * result + const Ignore().hash(cache);
     return result;
   }
 }
@@ -98,8 +98,8 @@ class Bar$ {
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Baz {
-  math.Point<num> get prefixedField;
   const $Baz();
+  math.Point<num> get prefixedField;
   Baz copyWith({math.Point<num> prefixedField}) =>
       Baz(prefixedField: prefixedField ?? this.prefixedField);
   @override
