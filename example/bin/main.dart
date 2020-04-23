@@ -4,15 +4,24 @@ import 'dart:math' as math;
 
 part 'main.g.dart';
 
+enum Enum {
+  a, b
+}
+
+extension EnumPlus on Enum {
+  String someText() => "text";
+}
+
 // Only requirement is that it has a constructor with named arguments for all fields
 @FunctionalData()
 class Foo extends $Foo {
   final int number;
   final String name;
+  final Enum enu;
 
   String get displayString => "$name[$number]";
 
-  const Foo({this.number, this.name});
+  const Foo({this.number, this.name, this.enu});
 }
 
 @FunctionalData()

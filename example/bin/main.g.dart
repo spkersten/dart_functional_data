@@ -9,19 +9,24 @@ part of 'main.dart';
 abstract class $Foo {
   int get number;
   String get name;
+  Enum get enu;
   const $Foo();
-  Foo copyWith({int number, String name}) =>
-      Foo(number: number ?? this.number, name: name ?? this.name);
-  String toString() => "Foo(number: $number, name: $name)";
+  Foo copyWith({int number, String name, Enum enu}) => Foo(
+      number: number ?? this.number,
+      name: name ?? this.name,
+      enu: enu ?? this.enu);
+  String toString() => "Foo(number: $number, name: $name, enu: $enu)";
   bool operator ==(dynamic other) =>
       other.runtimeType == runtimeType &&
       number == other.number &&
-      name == other.name;
+      name == other.name &&
+      enu == other.enu;
   @override
   int get hashCode {
     var result = 17;
     result = 37 * result + number.hashCode;
     result = 37 * result + name.hashCode;
+    result = 37 * result + enu.hashCode;
     return result;
   }
 }
@@ -31,6 +36,8 @@ class Foo$ {
       (s_) => s_.number, (s_, number) => s_.copyWith(number: number));
   static final name =
       Lens<Foo, String>((s_) => s_.name, (s_, name) => s_.copyWith(name: name));
+  static final enu =
+      Lens<Foo, Enum>((s_) => s_.enu, (s_, enu) => s_.copyWith(enu: enu));
 }
 
 abstract class $Bar {
@@ -49,16 +56,16 @@ abstract class $Bar {
   bool operator ==(dynamic other) =>
       other.runtimeType == runtimeType &&
       foo == other.foo &&
-      const DeepCollectionEquality().equals(foos, other.foos) &&
+      DeepCollectionEquality().equals(foos, other.foos) &&
       driver == other.driver &&
-      const Ignore().equals(cache, other.cache);
+      Ignore().equals(cache, other.cache);
   @override
   int get hashCode {
     var result = 17;
     result = 37 * result + foo.hashCode;
-    result = 37 * result + const DeepCollectionEquality().hash(foos);
+    result = 37 * result + DeepCollectionEquality().hash(foos);
     result = 37 * result + driver.hashCode;
-    result = 37 * result + const Ignore().hash(cache);
+    result = 37 * result + Ignore().hash(cache);
     return result;
   }
 }

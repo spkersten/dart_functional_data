@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Support for extension methods 
+
 ## 0.2.4
 
 - Relax version dependency on analyzer
