@@ -1,5 +1,5 @@
 name: functional_data
-version: 0.2.2
+version: 0.3.0
 description: >-
   Annotations and helpers for lenses for code generated with the `function_data_generator` package.
 authors:
@@ -7,8 +7,9 @@ authors:
 homepage: https://github.com/spkersten/dart_functional_data
 
 environment:
-  sdk: ">=2.4.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   meta: ^1.1.7
   collection: ^1.14.12
+  plain_optional:

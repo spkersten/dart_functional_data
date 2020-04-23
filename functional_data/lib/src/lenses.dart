@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:plain_optional/plain_optional.dart';
 
 /// Get the value of a field of type [T] of [subject]
 typedef Getter<S, T> = T Function(S subject);
@@ -130,18 +131,7 @@ class List$ {
       );
 }
 
-@immutable
-class Optional<T> {
-  final T raw;
-
-  const Optional(this.raw);
-
-  const Optional.none() : raw = null;
-
-  bool get hasValue => raw != null;
-
-  Optional<R> map<R>(R Function(T) f) =>
-      Optional<R>(raw != null ? f(raw) : null);
-
-  T valueOr(T fallback) => raw != null ? raw : fallback;
+extension DeprecatedOptional<T> on Optional<T> {
+  @Deprecated("Use `unsafe` instead")
+  T get raw => unsafe;
 }

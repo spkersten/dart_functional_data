@@ -1,3 +1,8 @@
+## 0.3.0
+
+- Use Optional form plain_optional
+- Fix bug where List$.whereOptional lens would return null
+
 ## 0.2.2
 
 - Add instructions for using functional data in README
