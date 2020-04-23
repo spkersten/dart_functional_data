@@ -53,7 +53,7 @@ String _generateDataType(Element element) {
   final classElement = element as ClassElement;
 
   final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
-    return Field(f.name, prefixes[f.type.element.library.toString()], _typeAsCode(f.type),
+    return Field(f.name, prefixes[f.type.element?.library?.toString()], _typeAsCode(f.type),
           _getCustomEquality(f.metadata));
   });
 

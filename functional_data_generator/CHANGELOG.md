@@ -1,3 +1,7 @@
+## 0.3.1
+
+- Fix bug where code generation fails for field of Function type
+
 ## 0.3.0
 
 - Support for extension methods
