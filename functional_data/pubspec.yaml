@@ -12,4 +12,4 @@ environment:
 dependencies:
   meta: ^1.1.7
   collection: ^1.14.12
-  plain_optional:
+  plain_optional: ^0.1.3
