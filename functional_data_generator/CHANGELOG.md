@@ -1,3 +1,8 @@
+## 0.3.3
+
+- Fix bug where question mark would appear in generated code when using certain values
+  for CustomEquality
+
 ## 0.3.2
 
 - Fix some warnings in generated code

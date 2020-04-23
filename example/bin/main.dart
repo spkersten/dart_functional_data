@@ -4,9 +4,7 @@ import 'dart:math' as math;
 
 part 'main.g.dart';
 
-enum Enum {
-  a, b
-}
+enum Enum { a, b }
 
 extension EnumPlus on Enum {
   String someText() => "text";
@@ -24,6 +22,19 @@ class Foo extends $Foo {
   const Foo({this.number, this.name, this.enu});
 }
 
+class MyEquality<T> implements Equality {
+  const MyEquality();
+
+  @override
+  bool equals(e1, e2) => null;
+
+  @override
+  int hash(e) => null;
+
+  @override
+  bool isValidKey(Object o) => null;
+}
+
 @FunctionalData()
 class Bar extends $Bar {
   final Foo foo;
@@ -33,6 +44,7 @@ class Bar extends $Bar {
   @CustomEquality(DeepCollectionEquality())
   final List<Foo> foos;
 
+  @CustomEquality(MyEquality<String>())
   final String driver;
 
   @CustomEquality(Ignore())
@@ -44,6 +56,7 @@ class Bar extends $Bar {
 @FunctionalData()
 class Baz extends $Baz {
   final math.Point prefixedField;
+
   const Baz({this.prefixedField});
 }
 
