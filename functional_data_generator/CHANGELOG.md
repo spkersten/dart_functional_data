@@ -1,6 +1,7 @@
 ## 0.3.0
 
-- Support for extension methods 
+- Support for extension methods
+- Suppress warnings on generated code
 
 ## 0.2.4
 

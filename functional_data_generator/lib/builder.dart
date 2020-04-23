@@ -59,11 +59,11 @@ String _generateDataType(Element element) {
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString =
-      'String toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
+      '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
   final copyWith =
       '$className copyWith({${fields.map((f) => '${f.type} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', ')});';
 
-  final equality = 'bool operator ==(dynamic other) => ${([
+  final equality = '@override\nbool operator ==(dynamic other) => ${([
         'other.runtimeType == runtimeType'
       ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && ')};';
 
@@ -82,7 +82,14 @@ String _generateDataType(Element element) {
       'abstract class \$$className { ${fieldDeclarations.join()} $constructor $copyWith $toString $equality $hash }';
   final lensesClass = 'class $className\$ { ${lenses.join()} }';
 
-  return '$dataClass $lensesClass';
+  final warningSuppressions = '''
+// ignore_for_file: join_return_with_assignment
+// ignore_for_file: avoid_classes_with_only_static_members
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
+''';
+
+  return '$warningSuppressions $dataClass $lensesClass';
 }
 
 String _typeAsCode(DartType type) {

@@ -6,6 +6,10 @@ part of 'main.dart';
 // FunctionalDataGenerator
 // **************************************************************************
 
+// ignore_for_file: join_return_with_assignment
+// ignore_for_file: avoid_classes_with_only_static_members
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Foo {
   int get number;
   String get name;
@@ -15,7 +19,9 @@ abstract class $Foo {
       number: number ?? this.number,
       name: name ?? this.name,
       enu: enu ?? this.enu);
+  @override
   String toString() => "Foo(number: $number, name: $name, enu: $enu)";
+  @override
   bool operator ==(dynamic other) =>
       other.runtimeType == runtimeType &&
       number == other.number &&
@@ -40,6 +46,10 @@ class Foo$ {
       Lens<Foo, Enum>((s_) => s_.enu, (s_, enu) => s_.copyWith(enu: enu));
 }
 
+// ignore_for_file: join_return_with_assignment
+// ignore_for_file: avoid_classes_with_only_static_members
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Bar {
   Foo get foo;
   List<Foo> get foos;
@@ -51,8 +61,10 @@ abstract class $Bar {
       foos: foos ?? this.foos,
       driver: driver ?? this.driver,
       cache: cache ?? this.cache);
+  @override
   String toString() =>
       "Bar(foo: $foo, foos: $foos, driver: $driver, cache: $cache)";
+  @override
   bool operator ==(dynamic other) =>
       other.runtimeType == runtimeType &&
       foo == other.foo &&
@@ -81,12 +93,18 @@ class Bar$ {
       (s_) => s_.cache, (s_, cache) => s_.copyWith(cache: cache));
 }
 
+// ignore_for_file: join_return_with_assignment
+// ignore_for_file: avoid_classes_with_only_static_members
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Baz {
   math.Point<num> get prefixedField;
   const $Baz();
   Baz copyWith({math.Point<num> prefixedField}) =>
       Baz(prefixedField: prefixedField ?? this.prefixedField);
+  @override
   String toString() => "Baz(prefixedField: $prefixedField)";
+  @override
   bool operator ==(dynamic other) =>
       other.runtimeType == runtimeType && prefixedField == other.prefixedField;
   @override
