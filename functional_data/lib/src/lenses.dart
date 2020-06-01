@@ -18,8 +18,8 @@ class Lens<S, T> {
   ///
   /// For example, `FooLens.bar.then(BarLens.name).get(foo)`, is equivalent to `foo.bar.name`.
   Lens<S, Q> then<Q>(Lens<T, Q> lens) => Lens<S, Q>(
-        (s) => lens.get(get(s)),
-        (s, q) => update(s, lens.update(get(s), q)),
+        (S s) => lens.get(get(s)),
+        (S s, Q q) => update(s, lens.update(get(s), q)),
       );
 
   /// Chain two lenses together.
@@ -35,8 +35,8 @@ class Lens<S, T> {
   /// ```
   Lens<S, Q> thenWithContext<Q>(Lens<T, Q> Function(S context) lensMaker) =>
       Lens<S, Q>(
-        (s) => lensMaker(s).get(get(s)),
-        (s, q) => update(s, lensMaker(s).update(get(s), q)),
+        (S s) => lensMaker(s).get(get(s)),
+        (S s, Q q) => update(s, lensMaker(s).update(get(s), q)),
       );
 
   /// Return a copy of [s] where the field of this lenses focus has been transformed by applying [f]
@@ -94,8 +94,8 @@ class List$ {
   List$._();
 
   static Lens<List<T>, T> atIndex<T>(int i) => Lens<List<T>, T>(
-        (s) => s[i],
-        (s, t) {
+        (List<T> s) => s[i],
+        (List<T> s, T t) {
           assert(i >= 0 && i < s.length);
           final newS = List<T>.from(s);
           newS.replaceRange(i, i + 1, [t]);
@@ -107,8 +107,8 @@ class List$ {
 
   static Lens<List<T>, T> where<T>(bool Function(T) predicate) =>
       Lens<List<T>, T>(
-        (s) => s.firstWhere(predicate),
-        (s, t) {
+        (List<T> s) => s.firstWhere(predicate),
+        (List<T> s, T t) {
           final index = s.indexWhere(predicate);
           final newS = List<T>.from(s);
           newS.replaceRange(index, index + 1, [t]);
@@ -119,13 +119,13 @@ class List$ {
   static Lens<List<T>, Optional<T>> whereOptional<T>(
           bool Function(T) predicate) =>
       Lens<List<T>, Optional<T>>(
-        (s) => Optional<T>(s.firstWhere(predicate, orElse: () => null)),
-        (s, t) {
+        (List<T> s) => Optional<T>(s.firstWhere(predicate, orElse: () => null)),
+        (List<T> s, Optional<T> t) {
           if (!t.hasValue) return s;
           final index = s.indexWhere(predicate);
           if (index < 0) return s;
           final newS = List<T>.from(s);
-          newS.replaceRange(index, index + 1, [t.raw]);
+          newS.replaceRange(index, index + 1, [t.unsafe]);
           return newS;
         },
       );

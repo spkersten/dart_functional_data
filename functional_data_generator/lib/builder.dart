@@ -68,12 +68,12 @@ String _generateDataType(Element element) {
       ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && ')};';
 
   final hash =
-      '@override int get hashCode { var result = 17; ${fields.map((f) => 'result = 37 * result + ${_generateHash(f)};').join()} return result; }';
+      '@override int get hashCode { int result = 17; ${fields.map((f) => 'result = 37 * result + ${_generateHash(f)};').join()} return result; }';
 
   final lenses = fields.map((f) {
     final name = f.name;
     final type = f.type;
-    return 'static final $name = Lens<$className, $type>((s_) => s_.$name, (s_, $name) => s_.copyWith($name: $name));';
+    return 'static final Lens<$className, $type> $name = Lens<$className, $type>(($className s_) => s_.$name, ($className s_, $name) => s_.copyWith($name: $name));';
   });
 
   final constructor = 'const \$$className();';
