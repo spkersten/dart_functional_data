@@ -59,7 +59,7 @@ String _generateDataType(Element element) {
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString =
-      '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
+      "@override\nString toString() => '$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})';";
   final copyWith =
       '$className copyWith({${fields.map((f) => '${f.type} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', ')});';
 
