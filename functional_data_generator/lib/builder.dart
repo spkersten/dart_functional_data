@@ -1,3 +1,5 @@
+// @dart=2.11
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
@@ -10,16 +12,14 @@ Builder functionalData(BuilderOptions options) =>
 
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
-  generateForAnnotatedElement(
-          Element element, ConstantReader annotation, BuildStep buildStep) =>
+  generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) =>
       _generateDataType(element);
 }
 
-bool elementHasMetaAnnotation(Element e) =>
-    e.metadata.any(isSimpleDataAnnotation);
+bool elementHasMetaAnnotation(Element e) => e.metadata.any(isSimpleDataAnnotation);
 
 bool isSimpleDataAnnotation(ElementAnnotation a) =>
-    a.computeConstantValue().type.name.toString() == "FunctionalData";
+    a.computeConstantValue().type.getDisplayString(withNullability: false) == "FunctionalData";
 
 class CustomEquality {
   final Equality equality;
@@ -29,43 +29,40 @@ class CustomEquality {
 
 String _getCustomEquality(List<ElementAnnotation> annotations) {
   final annotation = annotations.firstWhere(
-      (a) => a.computeConstantValue().type.name == "CustomEquality",
+      (a) => a.computeConstantValue().type.getDisplayString(withNullability: false) == "CustomEquality",
       orElse: () => null);
   if (annotation != null) {
     final source = annotation.toSource();
-    return 'const ' + source.substring("@CustomEquality(".length, source.length - 1).replaceAll('?', '');
+    return source.substring("@CustomEquality(".length, source.length - 1).replaceAll('?', '');
   } else
     return null;
 }
 
 String _generateDataType(Element element) {
-  if (element is! ClassElement)
-    throw new Exception(
-        'FunctionalData annotation must only be used on classes');
+  if (element is! ClassElement) throw new Exception('FunctionalData annotation must only be used on classes');
 
   final prefixes = Map.fromEntries(element.library.imports
       .where((import) => import.prefix != null)
-      .map(
-          (import) => MapEntry(import.importedLibrary.toString(), import.prefix.name)));
+      .map((import) => MapEntry(import.importedLibrary.toString(), import.prefix.name)));
 
   final className = element.name.replaceAll('\$', '');
 
   final classElement = element as ClassElement;
 
   final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
-    return Field(f.name, prefixes[f.type.element?.library?.toString()], _typeAsCode(f.type),
-          _getCustomEquality(f.metadata));
+    return Field(
+        f.name, prefixes[f.type.element?.library?.toString()], _typeAsCode(f.type), _getCustomEquality(f.metadata));
   });
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString =
       '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
   final copyWith =
-      '$className copyWith({${fields.map((f) => '${f.type} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', ')});';
+      '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', \n')});';
 
   final equality = '@override\nbool operator ==(dynamic other) => ${([
         'other.runtimeType == runtimeType'
-      ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && ')};';
+      ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && \n')};';
 
   final hash =
       '@override int get hashCode { var result = 17; ${fields.map((f) => 'result = 37 * result + ${_generateHash(f)};').join()} return result; }';
@@ -101,7 +98,7 @@ String _typeAsCode(DartType type) {
 
     return '${_typeAsCode(type.returnType)} Function($parameters)';
   } else {
-    return type.displayName;
+    return type.getDisplayString(withNullability: true);
   }
 }
 
@@ -124,11 +121,13 @@ String _generateHash(Field f) {
 class Field {
   final String name;
   final String prefix;
+
   String get type => prefix == null ? _type : "$prefix.$_type";
+
+  String get optionalType => type[type.length - 1] == '?' ? type : "$type?";
   final String customEquality;
 
-  const Field(this.name, this.prefix, String type, this.customEquality)
-      : _type = type;
+  const Field(this.name, this.prefix, String type, this.customEquality) : _type = type;
 
   final String _type;
 }

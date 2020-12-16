@@ -1,3 +1,7 @@
+## 1.0.0-nullsafety.0
+
+- Make generated code support null-safety
+
 ## 0.3.4
 
 - Update analyzer dependency

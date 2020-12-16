@@ -14,8 +14,8 @@ abstract class $Foo {
   const $Foo();
   int get number;
   String get name;
-  Enum get enu;
-  Foo copyWith({int number, String name, Enum enu}) => Foo(
+  Enum? get enu;
+  Foo copyWith({int? number, String? name, Enum? enu}) => Foo(
       number: number ?? this.number,
       name: name ?? this.name,
       enu: enu ?? this.enu);
@@ -43,7 +43,7 @@ class Foo$ {
   static final name =
       Lens<Foo, String>((s_) => s_.name, (s_, name) => s_.copyWith(name: name));
   static final enu =
-      Lens<Foo, Enum>((s_) => s_.enu, (s_, enu) => s_.copyWith(enu: enu));
+      Lens<Foo, Enum?>((s_) => s_.enu, (s_, enu) => s_.copyWith(enu: enu));
 }
 
 // ignore_for_file: join_return_with_assignment
@@ -55,12 +55,13 @@ abstract class $Bar {
   Foo get foo;
   List<Foo> get foos;
   String get driver;
-  String get cache;
-  Bar copyWith({Foo foo, List<Foo> foos, String driver, String cache}) => Bar(
-      foo: foo ?? this.foo,
-      foos: foos ?? this.foos,
-      driver: driver ?? this.driver,
-      cache: cache ?? this.cache);
+  String? get cache;
+  Bar copyWith({Foo? foo, List<Foo>? foos, String? driver, String? cache}) =>
+      Bar(
+          foo: foo ?? this.foo,
+          foos: foos ?? this.foos,
+          driver: driver ?? this.driver,
+          cache: cache ?? this.cache);
   @override
   String toString() =>
       "Bar(foo: $foo, foos: $foos, driver: $driver, cache: $cache)";
@@ -89,7 +90,7 @@ class Bar$ {
       (s_) => s_.foos, (s_, foos) => s_.copyWith(foos: foos));
   static final driver = Lens<Bar, String>(
       (s_) => s_.driver, (s_, driver) => s_.copyWith(driver: driver));
-  static final cache = Lens<Bar, String>(
+  static final cache = Lens<Bar, String?>(
       (s_) => s_.cache, (s_, cache) => s_.copyWith(cache: cache));
 }
 
@@ -100,7 +101,7 @@ class Bar$ {
 abstract class $Baz {
   const $Baz();
   math.Point<num> get prefixedField;
-  Baz copyWith({math.Point<num> prefixedField}) =>
+  Baz copyWith({math.Point<num>? prefixedField}) =>
       Baz(prefixedField: prefixedField ?? this.prefixedField);
   @override
   String toString() => "Baz(prefixedField: $prefixedField)";
