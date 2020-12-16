@@ -20,5 +20,5 @@ class Ignore implements Equality {
   int hash(_) => 0;
 
   @override
-  bool isValidKey(Object o) => true;
+  bool isValidKey(Object? o) => true;
 }

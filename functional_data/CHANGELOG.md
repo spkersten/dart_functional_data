@@ -1,3 +1,7 @@
+## 1.0.0-nullsafety.0
+
+- Make lenses null-safe
+
 ## 0.3.0
 
 - Use Optional form plain_optional

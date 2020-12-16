@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:meta/meta.dart';
 import 'package:plain_optional/plain_optional.dart';
 
@@ -33,8 +34,7 @@ class Lens<S, T> {
   ///  print(driversNumber.of(bar).value);
   ///  // 101
   /// ```
-  Lens<S, Q> thenWithContext<Q>(Lens<T, Q> Function(S context) lensMaker) =>
-      Lens<S, Q>(
+  Lens<S, Q> thenWithContext<Q>(Lens<T, Q> Function(S context) lensMaker) => Lens<S, Q>(
         (s) => lensMaker(s).get(get(s)),
         (s, q) => update(s, lensMaker(s).update(get(s), q)),
       );
@@ -62,8 +62,7 @@ class FocusedLens<S, T> {
   /// Chain two lenses together.
   ///
   /// For example, `FooLens.bar.of(foo).then(BarLens.name)`, is equivalent to `foo.bar.name`.
-  FocusedLens<S, Q> then<Q>(Lens<T, Q> lens) =>
-      FocusedLens<S, Q>._(_subject, _lens.then(lens));
+  FocusedLens<S, Q> then<Q>(Lens<T, Q> lens) => FocusedLens<S, Q>._(_subject, _lens.then(lens));
 
   /// Chain two lenses together.
   ///
@@ -76,8 +75,7 @@ class FocusedLens<S, T> {
   ///  print(driversNumber.value);
   ///  // 101
   /// ```
-  FocusedLens<S, Q> thenWithContext<Q>(
-          Lens<T, Q> Function(S context) lensMaker) =>
+  FocusedLens<S, Q> thenWithContext<Q>(Lens<T, Q> Function(S context) lensMaker) =>
       FocusedLens<S, Q>._(_subject, _lens.thenWithContext(lensMaker));
 
   /// The value to lens is focused on
@@ -105,8 +103,7 @@ class List$ {
 
   static Lens<List<T>, T> first<T>() => atIndex(0);
 
-  static Lens<List<T>, T> where<T>(bool Function(T) predicate) =>
-      Lens<List<T>, T>(
+  static Lens<List<T>, T> where<T>(bool Function(T) predicate) => Lens<List<T>, T>(
         (s) => s.firstWhere(predicate),
         (s, t) {
           final index = s.indexWhere(predicate);
@@ -116,22 +113,15 @@ class List$ {
         },
       );
 
-  static Lens<List<T>, Optional<T>> whereOptional<T>(
-          bool Function(T) predicate) =>
-      Lens<List<T>, Optional<T>>(
-        (s) => Optional<T>(s.firstWhere(predicate, orElse: () => null)),
+  static Lens<List<T>, Optional<T>> whereOptional<T>(bool Function(T) predicate) => Lens<List<T>, Optional<T>>(
+        (s) => Optional<T>(s.firstWhereOrNull(predicate)),
         (s, t) {
           if (!t.hasValue) return s;
           final index = s.indexWhere(predicate);
           if (index < 0) return s;
           final newS = List<T>.from(s);
-          newS.replaceRange(index, index + 1, [t.raw]);
+          newS.replaceRange(index, index + 1, [t.unsafe]);
           return newS;
-        },
+        } as List<T> Function(List<T>, Optional<T>),
       );
-}
-
-extension DeprecatedOptional<T> on Optional<T> {
-  @Deprecated("Use `unsafe` instead")
-  T get raw => unsafe;
 }
