@@ -1,3 +1,8 @@
+## 0.3.5
+
+- Update analyzer dependency
+
+
 ## 0.3.4
 
 - Update analyzer dependency

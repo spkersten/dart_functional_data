@@ -33,7 +33,7 @@ String _getCustomEquality(List<ElementAnnotation> annotations) {
       orElse: () => null);
   if (annotation != null) {
     final source = annotation.toSource();
-    return 'const ' + source.substring("@CustomEquality(".length, source.length - 1).replaceAll('?', '');
+    return source.substring("@CustomEquality(".length, source.length - 1).replaceAll('?', '');
   } else
     return null;
 }
