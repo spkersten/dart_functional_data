@@ -27,6 +27,28 @@ class Person extends $Person {
 Because of this design, you have complete control over the class. You can, for example, add named constructors
 or methods to the class like you're used to.
 
+## Ignoring fields
+
+Certain fields can be ignored. This is useful when we want to lazily cache data for our immutable classes.
+
+```dart
+@FunctionalData()
+class Person extends $Person {
+  final String name;
+  final int age;
+
+  const Person({this.name, this.age});
+
+  const Person.anonymous() : this(name: "John Doe", age: null);
+
+  // This field will be ignored by @FunctionalData()
+  @Ignore() int _ageInDays;
+  int ageInDays => _ageInDays ??= numberOfDaysInMostYears * age;
+
+  static const numberOfDaysInMostYears = 356;
+}
+```
+
 ## Lenses
 
 For every class, lenses are generated for all fields which allow viewing a field or creating a new
@@ -104,6 +126,9 @@ class Bar extends $Bar {
   final List<Foo> foos;
 
   final String driver;
+
+  @Ignore() String _cachedField;
+  String cachedField => _cachedField ??= foos.map((foo) => foo.toString()).join(", ");
 
   const Bar({this.foo, this.foos, this.driver});
 }

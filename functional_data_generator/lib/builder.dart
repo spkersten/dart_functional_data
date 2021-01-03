@@ -6,11 +6,11 @@ import 'package:source_gen/source_gen.dart';
 import 'package:functional_data/functional_data.dart';
 
 Builder functionalData(BuilderOptions options) =>
-    new SharedPartBuilder([new FunctionalDataGenerator()], 'functional_data');
+    SharedPartBuilder([FunctionalDataGenerator()], 'functional_data');
 
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
-  generateForAnnotatedElement(
+  dynamic generateForAnnotatedElement(
           Element element, ConstantReader annotation, BuildStep buildStep) =>
       _generateDataType(element);
 }
@@ -20,6 +20,9 @@ bool elementHasMetaAnnotation(Element e) =>
 
 bool isSimpleDataAnnotation(ElementAnnotation a) =>
     a.computeConstantValue().type.name.toString() == "FunctionalData";
+
+bool isIgnoreAnnotation(ElementAnnotation a) =>
+    a.computeConstantValue().type.name.toString() == "Ignore";
 
 class CustomEquality {
   final Equality equality;
@@ -52,7 +55,9 @@ String _generateDataType(Element element) {
 
   final classElement = element as ClassElement;
 
-  final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
+  final fields = classElement.fields.where((f) =>
+    !f.isSynthetic && !f.isStatic && !f.metadata.any(isIgnoreAnnotation)
+  ).map((f) {
     return Field(f.name, prefixes[f.type.element?.library?.toString()], _typeAsCode(f.type),
           _getCustomEquality(f.metadata));
   });
