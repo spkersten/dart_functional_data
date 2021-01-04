@@ -63,7 +63,8 @@ String _generateDataType(Element element) {
   final copyWith =
       '$className copyWith({${fields.map((f) => '${f.type} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', ')});';
 
-  final equality = '@override\nbool operator ==(dynamic other) => ${([
+  final equality = '@override\nbool operator ==(Object other) => ${([
+        'other is $className',
         'other.runtimeType == runtimeType'
       ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && ')};';
 
