@@ -22,7 +22,8 @@ abstract class $Foo {
   @override
   String toString() => "Foo(number: $number, name: $name, enu: $enu)";
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
+      other is Foo &&
       other.runtimeType == runtimeType &&
       number == other.number &&
       name == other.name &&
@@ -65,7 +66,8 @@ abstract class $Bar {
   String toString() =>
       "Bar(foo: $foo, foos: $foos, driver: $driver, cache: $cache)";
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
+      other is Bar &&
       other.runtimeType == runtimeType &&
       foo == other.foo &&
       const DeepCollectionEquality().equals(foos, other.foos) &&
@@ -105,8 +107,10 @@ abstract class $Baz {
   @override
   String toString() => "Baz(prefixedField: $prefixedField)";
   @override
-  bool operator ==(dynamic other) =>
-      other.runtimeType == runtimeType && prefixedField == other.prefixedField;
+  bool operator ==(Object other) =>
+      other is Baz &&
+      other.runtimeType == runtimeType &&
+      prefixedField == other.prefixedField;
   @override
   int get hashCode {
     var result = 17;
