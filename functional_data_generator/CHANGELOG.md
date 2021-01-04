@@ -1,7 +1,10 @@
+## 0.3.6
+
+- Don't use dynamic in generated code
+
 ## 0.3.5
 
 - Update analyzer dependency
-
 
 ## 0.3.4
 
