@@ -1,5 +1,6 @@
 // @dart=2.11
 
+import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
@@ -7,12 +8,11 @@ import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:functional_data/functional_data.dart';
 
-Builder functionalData(BuilderOptions options) =>
-    new SharedPartBuilder([new FunctionalDataGenerator()], 'functional_data');
+Builder functionalData(BuilderOptions options) => SharedPartBuilder([FunctionalDataGenerator()], 'functional_data');
 
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
-  generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) =>
+  Future<String> generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) =>
       _generateDataType(element);
 }
 
@@ -38,12 +38,11 @@ String _getCustomEquality(List<ElementAnnotation> annotations) {
     return null;
 }
 
-String _generateDataType(Element element) {
-  if (element is! ClassElement) throw new Exception('FunctionalData annotation must only be used on classes');
+Future<String> _generateDataType(Element element) async {
+  if (element is! ClassElement) throw Exception('FunctionalData annotation must only be used on classes');
 
-  final prefixes = Map.fromEntries(element.library.imports
-      .where((import) => import.prefix != null)
-      .map((import) => MapEntry(import.importedLibrary.toString(), import.prefix.name)));
+  final resolvedLibrary = await element.session.getResolvedLibraryByElement(element.library);
+  resolvedLibrary.getElementDeclaration(element).node;
 
   final className = element.name.replaceAll('\$', '');
 
@@ -51,7 +50,13 @@ String _generateDataType(Element element) {
 
   final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
     return Field(
-        f.name, prefixes[f.type.element?.library?.toString()], _typeAsCode(f.type), _getCustomEquality(f.metadata));
+      f.name,
+      null,
+      ((resolvedLibrary.getElementDeclaration(f).node as VariableDeclaration).parent as VariableDeclarationList)
+          .type
+          .toSource(),
+      _getCustomEquality(f.metadata),
+    );
   });
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');

@@ -14,7 +14,7 @@ class Ignore implements Equality {
   const Ignore();
 
   @override
-  bool equals(_, __) => true;
+  bool equals(dynamic _, dynamic __) => true;
 
   @override
   int hash(_) => 0;
