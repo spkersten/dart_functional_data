@@ -1,35 +1,20 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
-import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:functional_data/functional_data.dart';
 
-Builder functionalData(BuilderOptions options) =>
-    new SharedPartBuilder([new FunctionalDataGenerator()], 'functional_data');
+Builder functionalData(BuilderOptions options) => SharedPartBuilder([FunctionalDataGenerator()], 'functional_data');
 
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
-  generateForAnnotatedElement(
-          Element element, ConstantReader annotation, BuildStep buildStep) =>
+  Future<String> generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) =>
       _generateDataType(element);
-}
-
-bool elementHasMetaAnnotation(Element e) =>
-    e.metadata.any(isSimpleDataAnnotation);
-
-bool isSimpleDataAnnotation(ElementAnnotation a) =>
-    a.computeConstantValue().type.name.toString() == "FunctionalData";
-
-class CustomEquality {
-  final Equality equality;
-
-  const CustomEquality(this.equality);
 }
 
 String _getCustomEquality(List<ElementAnnotation> annotations) {
   final annotation = annotations.firstWhere(
-      (a) => a.computeConstantValue().type.name == "CustomEquality",
+      (a) => a.computeConstantValue().type.getDisplayString(withNullability: false) == "CustomEquality",
       orElse: () => null);
   if (annotation != null) {
     final source = annotation.toSource();
@@ -38,23 +23,24 @@ String _getCustomEquality(List<ElementAnnotation> annotations) {
     return null;
 }
 
-String _generateDataType(Element element) {
-  if (element is! ClassElement)
-    throw new Exception(
-        'FunctionalData annotation must only be used on classes');
+Future<String> _generateDataType(Element element) async {
+  if (element is! ClassElement) throw Exception('FunctionalData annotation must only be used on classes');
 
-  final prefixes = Map.fromEntries(element.library.imports
-      .where((import) => import.prefix != null)
-      .map(
-          (import) => MapEntry(import.importedLibrary.toString(), import.prefix.name)));
+  final resolvedLibrary = await element.session.getResolvedLibraryByElement(element.library);
+  resolvedLibrary.getElementDeclaration(element).node;
 
   final className = element.name.replaceAll('\$', '');
 
   final classElement = element as ClassElement;
 
   final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
-    return Field(f.name, prefixes[f.type.element?.library?.toString()], _typeAsCode(f.type),
-          _getCustomEquality(f.metadata));
+    return Field(
+      f.name,
+      ((resolvedLibrary.getElementDeclaration(f).node as VariableDeclaration).parent as VariableDeclarationList)
+          .type
+          .toSource(),
+      _getCustomEquality(f.metadata),
+    );
   });
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
@@ -93,19 +79,6 @@ String _generateDataType(Element element) {
   return '$warningSuppressions $dataClass $lensesClass';
 }
 
-String _typeAsCode(DartType type) {
-  if (type is FunctionType) {
-    final positionArgs = type.parameters.where((p) => p.isPositional).map((p) => _typeAsCode(p.type)).join(', ');
-    final namedArgs = type.parameters.where((p) => p.isNamed).map((p) => '${_typeAsCode(p.type)} ${p.name}').join(', ');
-
-    final parameters = namedArgs.isEmpty ? positionArgs : positionArgs + ', {$namedArgs}';
-
-    return '${_typeAsCode(type.returnType)} Function($parameters)';
-  } else {
-    return type.displayName;
-  }
-}
-
 String _generateEquality(Field f) {
   if (f.customEquality != null) {
     return '${f.customEquality}.equals(${f.name}, other.${f.name})';
@@ -124,12 +97,9 @@ String _generateHash(Field f) {
 
 class Field {
   final String name;
-  final String prefix;
-  String get type => prefix == null ? _type : "$prefix.$_type";
   final String customEquality;
 
-  const Field(this.name, this.prefix, String type, this.customEquality)
-      : _type = type;
+  const Field(this.name, this.type, this.customEquality);
 
-  final String _type;
+  final String type;
 }

@@ -1,3 +1,7 @@
+## 0.3.7
+
+- Fix handling of prefixed types
+
 ## 0.3.6
 
 - Don't use dynamic in generated code

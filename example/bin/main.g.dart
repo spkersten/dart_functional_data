@@ -14,8 +14,8 @@ abstract class $Foo {
   const $Foo();
   int get number;
   String get name;
-  Enum get enu;
-  Foo copyWith({int number, String name, Enum enu}) => Foo(
+  my_types.Enum get enu;
+  Foo copyWith({int number, String name, my_types.Enum enu}) => Foo(
       number: number ?? this.number,
       name: name ?? this.name,
       enu: enu ?? this.enu);
@@ -43,8 +43,8 @@ class Foo$ {
       (s_) => s_.number, (s_, number) => s_.copyWith(number: number));
   static final name =
       Lens<Foo, String>((s_) => s_.name, (s_, name) => s_.copyWith(name: name));
-  static final enu =
-      Lens<Foo, Enum>((s_) => s_.enu, (s_, enu) => s_.copyWith(enu: enu));
+  static final enu = Lens<Foo, my_types.Enum>(
+      (s_) => s_.enu, (s_, enu) => s_.copyWith(enu: enu));
 }
 
 // ignore_for_file: join_return_with_assignment
@@ -101,8 +101,8 @@ class Bar$ {
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Baz {
   const $Baz();
-  math.Point<num> get prefixedField;
-  Baz copyWith({math.Point<num> prefixedField}) =>
+  math.Point get prefixedField;
+  Baz copyWith({math.Point prefixedField}) =>
       Baz(prefixedField: prefixedField ?? this.prefixedField);
   @override
   String toString() => "Baz(prefixedField: $prefixedField)";
@@ -120,7 +120,6 @@ abstract class $Baz {
 }
 
 class Baz$ {
-  static final prefixedField = Lens<Baz, math.Point<num>>(
-      (s_) => s_.prefixedField,
+  static final prefixedField = Lens<Baz, math.Point>((s_) => s_.prefixedField,
       (s_, prefixedField) => s_.copyWith(prefixedField: prefixedField));
 }
