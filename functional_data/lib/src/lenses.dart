@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:meta/meta.dart';
-import 'package:plain_optional/plain_optional.dart';
 
 /// Get the value of a field of type [T] of [subject]
 typedef Getter<S, T> = T Function(S subject);
@@ -113,8 +112,8 @@ class List$ {
         },
       );
 
-  static Lens<List<T>, Optional<T>> whereOptional<T>(bool Function(T) predicate) => Lens<List<T>, Optional<T>>(
-        (s) => Optional<T>(s.firstWhereOrNull(predicate)),
+  static Lens<List<T>, T?> whereOptional<T>(bool Function(T) predicate) => Lens<List<T>, T?>(
+        (s) => s.firstWhereOrNull(predicate),
         (s, t) {
           if (!t.hasValue) return s;
           final index = s.indexWhere(predicate);
@@ -122,6 +121,6 @@ class List$ {
           final newS = List<T>.from(s);
           newS.replaceRange(index, index + 1, [t.unsafe]);
           return newS;
-        } as List<T> Function(List<T>, Optional<T>),
+        } as List<T> Function(List<T>, T?),
       );
 }
