@@ -1,4 +1,4 @@
-## 1.0.0-nullsafety.0
+## 1.0.0
 
 - Make lenses null-safe
 

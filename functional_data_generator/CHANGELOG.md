@@ -1,13 +1,7 @@
-## 1.0.0-nullsafety.2
+## 1.0.0
 
 - Fix handling of prefixed types
-
-## 1.0.0-nullsafety.1
-
 - Don't use dynamic in generated code
-
-## 1.0.0-nullsafety.0
-
 - Make generated code support null-safety
 
 ## 0.3.4
