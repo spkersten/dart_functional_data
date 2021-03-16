@@ -11,24 +11,24 @@ part 'main.g.dart';
 class Foo extends $Foo {
   final int number;
   final String name;
-  final my_types.Enum enu;
+  final my_types.Enum? enu;
 
   String get displayString => "$name[$number]";
 
-  const Foo({this.number, this.name, this.enu});
+  const Foo({required this.number, this.name = "default", this.enu});
 }
 
 class MyEquality<T> implements Equality {
   const MyEquality();
 
   @override
-  bool equals(e1, e2) => null;
+  bool equals(e1, e2) => true;
 
   @override
-  int hash(e) => null;
+  int hash(e) => 0;
 
   @override
-  bool isValidKey(Object o) => null;
+  bool isValidKey(Object? o) => true;
 }
 
 @FunctionalData()
@@ -44,16 +44,16 @@ class Bar extends $Bar {
   final String driver;
 
   @CustomEquality(Ignore())
-  final String cache;
+  final String? cache;
 
-  const Bar({this.foo, this.foos, this.driver, this.cache = null});
+  const Bar({required this.foo, required this.foos, required this.driver, this.cache = null});
 }
 
 @FunctionalData()
 class Baz extends $Baz {
   final math.Point prefixedField;
 
-  const Baz({this.prefixedField});
+  const Baz({required this.prefixedField});
 }
 
 main(List<String> arguments) {

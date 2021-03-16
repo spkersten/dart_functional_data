@@ -1,3 +1,5 @@
+// @dart=2.11
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
@@ -47,12 +49,12 @@ Future<String> _generateDataType(Element element) async {
   final toString =
       '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
   final copyWith =
-      '$className copyWith({${fields.map((f) => '${f.type} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', ')});';
+      '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', \n')});';
 
   final equality = '@override\nbool operator ==(Object other) => ${([
         'other is $className',
         'other.runtimeType == runtimeType'
-      ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && ')};';
+      ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && \n')};';
 
   final hash =
       '@override int get hashCode { var result = 17; ${fields.map((f) => 'result = 37 * result + ${_generateHash(f)};').join()} return result; }';
@@ -97,9 +99,10 @@ String _generateHash(Field f) {
 
 class Field {
   final String name;
+  final String type;
+
+  String get optionalType => type[type.length - 1] == '?' ? type : "$type?";
   final String customEquality;
 
   const Field(this.name, this.type, this.customEquality);
-
-  final String type;
 }

@@ -1,3 +1,9 @@
+## 1.0.0
+
+- Fix handling of prefixed types
+- Don't use dynamic in generated code
+- Make generated code support null-safety
+
 ## 0.3.7
 
 - Fix handling of prefixed types
