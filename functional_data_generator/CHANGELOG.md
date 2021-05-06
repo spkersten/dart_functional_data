@@ -1,3 +1,7 @@
+## 0.3.4+1
+
+- Improve operator== efficiency when comparing an object to itself
+
 ## 0.3.4
 
 - Update analyzer dependency

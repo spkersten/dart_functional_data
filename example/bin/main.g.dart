@@ -23,10 +23,11 @@ abstract class $Foo {
   String toString() => "Foo(number: $number, name: $name, enu: $enu)";
   @override
   bool operator ==(dynamic other) =>
+      identical(this, other) ||
       other.runtimeType == runtimeType &&
-      number == other.number &&
-      name == other.name &&
-      enu == other.enu;
+          number == other.number &&
+          name == other.name &&
+          enu == other.enu;
   @override
   int get hashCode {
     var result = 17;
@@ -66,11 +67,12 @@ abstract class $Bar {
       "Bar(foo: $foo, foos: $foos, driver: $driver, cache: $cache)";
   @override
   bool operator ==(dynamic other) =>
+      identical(this, other) ||
       other.runtimeType == runtimeType &&
-      foo == other.foo &&
-      const DeepCollectionEquality().equals(foos, other.foos) &&
-      const MyEquality<String>().equals(driver, other.driver) &&
-      const Ignore().equals(cache, other.cache);
+          foo == other.foo &&
+          const DeepCollectionEquality().equals(foos, other.foos) &&
+          const MyEquality<String>().equals(driver, other.driver) &&
+          const Ignore().equals(cache, other.cache);
   @override
   int get hashCode {
     var result = 17;
@@ -106,6 +108,7 @@ abstract class $Baz {
   String toString() => "Baz(prefixedField: $prefixedField)";
   @override
   bool operator ==(dynamic other) =>
+      identical(this, other) ||
       other.runtimeType == runtimeType && prefixedField == other.prefixedField;
   @override
   int get hashCode {
