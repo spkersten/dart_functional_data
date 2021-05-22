@@ -1,44 +1,58 @@
 // @dart=2.11
 
+import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
 import 'package:functional_data/functional_data.dart';
+import 'package:source_gen/source_gen.dart';
 
-Builder functionalData(BuilderOptions options) => SharedPartBuilder([FunctionalDataGenerator()], 'functional_data');
+Builder functionalData(BuilderOptions options) =>
+    SharedPartBuilder([FunctionalDataGenerator()], 'functional_data');
 
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
-  Future<String> generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) =>
+  Future<String> generateForAnnotatedElement(
+          Element element, ConstantReader annotation, BuildStep buildStep) =>
       _generateDataType(element);
 }
 
 String _getCustomEquality(List<ElementAnnotation> annotations) {
   final annotation = annotations.firstWhere(
-      (a) => a.computeConstantValue().type.getDisplayString(withNullability: false) == "CustomEquality",
+      (a) =>
+          a
+              .computeConstantValue()
+              .type
+              .getDisplayString(withNullability: false) ==
+          "CustomEquality",
       orElse: () => null);
   if (annotation != null) {
     final source = annotation.toSource();
-    return source.substring("@CustomEquality(".length, source.length - 1).replaceAll('?', '');
+    return source
+        .substring("@CustomEquality(".length, source.length - 1)
+        .replaceAll('?', '');
   } else
     return null;
 }
 
 Future<String> _generateDataType(Element element) async {
-  if (element is! ClassElement) throw Exception('FunctionalData annotation must only be used on classes');
+  if (element is! ClassElement)
+    throw Exception('FunctionalData annotation must only be used on classes');
 
-  final resolvedLibrary = await element.session.getResolvedLibraryByElement(element.library);
+  final resolvedLibrary = await element.session
+      .getResolvedLibraryByElement2(element.library) as ResolvedLibraryResult;
   resolvedLibrary.getElementDeclaration(element).node;
 
   final className = element.name.replaceAll('\$', '');
 
   final classElement = element as ClassElement;
 
-  final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
+  final fields =
+      classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
     return Field(
       f.name,
-      ((resolvedLibrary.getElementDeclaration(f).node as VariableDeclaration).parent as VariableDeclarationList)
+      ((resolvedLibrary.getElementDeclaration(f).node as VariableDeclaration)
+              .parent as VariableDeclarationList)
           .type
           .toSource(),
       _getCustomEquality(f.metadata),
@@ -71,14 +85,7 @@ Future<String> _generateDataType(Element element) async {
       'abstract class \$$className { $constructor ${fieldDeclarations.join()} $copyWith $toString $equality $hash }';
   final lensesClass = 'class $className\$ { ${lenses.join()} }';
 
-  final warningSuppressions = '''
-// ignore_for_file: join_return_with_assignment
-// ignore_for_file: avoid_classes_with_only_static_members
-// ignore_for_file: non_constant_identifier_names
-// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
-''';
-
-  return '$warningSuppressions $dataClass $lensesClass';
+  return '$dataClass $lensesClass';
 }
 
 String _generateEquality(Field f) {

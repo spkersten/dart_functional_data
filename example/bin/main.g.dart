@@ -6,10 +6,6 @@ part of 'main.dart';
 // FunctionalDataGenerator
 // **************************************************************************
 
-// ignore_for_file: join_return_with_assignment
-// ignore_for_file: avoid_classes_with_only_static_members
-// ignore_for_file: non_constant_identifier_names
-// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Foo {
   const $Foo();
   int get number;
@@ -47,10 +43,6 @@ class Foo$ {
       (s_) => s_.enu, (s_, enu) => s_.copyWith(enu: enu));
 }
 
-// ignore_for_file: join_return_with_assignment
-// ignore_for_file: avoid_classes_with_only_static_members
-// ignore_for_file: non_constant_identifier_names
-// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Bar {
   const $Bar();
   Foo get foo;
@@ -96,10 +88,6 @@ class Bar$ {
       (s_) => s_.cache, (s_, cache) => s_.copyWith(cache: cache));
 }
 
-// ignore_for_file: join_return_with_assignment
-// ignore_for_file: avoid_classes_with_only_static_members
-// ignore_for_file: non_constant_identifier_names
-// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Baz {
   const $Baz();
   math.Point get prefixedField;
