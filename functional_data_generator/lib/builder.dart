@@ -1,10 +1,11 @@
 // @dart=2.11
 
+import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
 import 'package:functional_data/functional_data.dart';
+import 'package:source_gen/source_gen.dart';
 
 Builder functionalData(BuilderOptions options) => SharedPartBuilder([FunctionalDataGenerator()], 'functional_data');
 
@@ -28,7 +29,7 @@ String _getCustomEquality(List<ElementAnnotation> annotations) {
 Future<String> _generateDataType(Element element) async {
   if (element is! ClassElement) throw Exception('FunctionalData annotation must only be used on classes');
 
-  final resolvedLibrary = await element.session.getResolvedLibraryByElement(element.library);
+  final resolvedLibrary = await element.session.getResolvedLibraryByElement2(element.library) as ResolvedLibraryResult;
   resolvedLibrary.getElementDeclaration(element).node;
 
   final className = element.name.replaceAll('\$', '');
@@ -51,34 +52,43 @@ Future<String> _generateDataType(Element element) async {
   final copyWith =
       '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', \n')});';
 
-  final equality = '@override\nbool operator ==(Object other) => ${([
+  final suppressMutableClass = '  // ignore: avoid_equals_and_hash_code_on_mutable_classes';
+  final equality = '@override\n$suppressMutableClass\nbool operator ==(Object other) => ${([
         'other is $className',
         'other.runtimeType == runtimeType'
       ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && \n')};';
 
-  final hash =
-      '@override int get hashCode { var result = 17; ${fields.map((f) => 'result = 37 * result + ${_generateHash(f)};').join()} return result; }';
+  String hashBody;
+  if (fields.isEmpty) {
+    hashBody = 'return ${className.hashCode};';
+  } else if (fields.length == 1) {
+    hashBody = 'return ${_generateHash(fields.single)};';
+  } else {
+    hashBody = 'var result = 17;\n'
+        '${fields.map((f) => 'result = 37 * result + ${_generateHash(f)};').join('\n')}\n'
+        'return result;';
+  }
+
+  final hash = '@override\n$suppressMutableClass\nint get hashCode {\n$hashBody\n}';
 
   final lenses = fields.map((f) {
     final name = f.name;
     final type = f.type;
-    return 'static final $name = Lens<$className, $type>((s_) => s_.$name, (s_, $name) => s_.copyWith($name: $name));';
+    final containerName = '${f.name}Container';
+    return 'static final $name = Lens<$className, $type>(\n'
+        '($containerName) => $containerName.$name,\n'
+        '($containerName, $name) => $containerName.copyWith($name: $name),\n);\n\n';
   });
 
   final constructor = 'const \$$className();';
 
   final dataClass =
-      'abstract class \$$className { $constructor ${fieldDeclarations.join()} $copyWith $toString $equality $hash }';
-  final lensesClass = 'class $className\$ { ${lenses.join()} }';
+      'abstract class \$$className { $constructor \n\n ${fieldDeclarations.join()} \n\n $copyWith \n\n $toString \n\n $equality \n\n $hash }\n\n';
 
-  final warningSuppressions = '''
-// ignore_for_file: join_return_with_assignment
-// ignore_for_file: avoid_classes_with_only_static_members
-// ignore_for_file: non_constant_identifier_names
-// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
-''';
+  const suppressClassWithStatics = '// ignore: avoid_classes_with_only_static_members';
+  final lensesClass = '$suppressClassWithStatics\nclass $className\$ { ${lenses.join()} }\n\n';
 
-  return '$warningSuppressions $dataClass $lensesClass';
+  return '$dataClass $lensesClass';
 }
 
 String _generateEquality(Field f) {
