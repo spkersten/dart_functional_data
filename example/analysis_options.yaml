@@ -12,3 +12,7 @@ linter:
     - test_types_in_equals
     - unrelated_type_equality_checks
     - valid_regexps
+    - join_return_with_assignment
+    - avoid_classes_with_only_static_members
+    - non_constant_identifier_names
+    - avoid_equals_and_hash_code_on_mutable_classes

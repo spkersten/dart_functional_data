@@ -6,29 +6,32 @@ part of 'main.dart';
 // FunctionalDataGenerator
 // **************************************************************************
 
-// ignore_for_file: join_return_with_assignment
-// ignore_for_file: avoid_classes_with_only_static_members
-// ignore_for_file: non_constant_identifier_names
-// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Foo {
   const $Foo();
+
   int get number;
   String get name;
   my_types.Enum? get enu;
+
   Foo copyWith({int? number, String? name, my_types.Enum? enu}) => Foo(
       number: number ?? this.number,
       name: name ?? this.name,
       enu: enu ?? this.enu);
+
   @override
   String toString() => "Foo(number: $number, name: $name, enu: $enu)";
+
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
       other is Foo &&
       other.runtimeType == runtimeType &&
       number == other.number &&
       name == other.name &&
       enu == other.enu;
+
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode {
     var result = 17;
     result = 37 * result + number.hashCode;
@@ -38,35 +41,45 @@ abstract class $Foo {
   }
 }
 
+// ignore: avoid_classes_with_only_static_members
 class Foo$ {
   static final number = Lens<Foo, int>(
-      (s_) => s_.number, (s_, number) => s_.copyWith(number: number));
-  static final name =
-      Lens<Foo, String>((s_) => s_.name, (s_, name) => s_.copyWith(name: name));
+    (numberContainer) => numberContainer.number,
+    (numberContainer, number) => numberContainer.copyWith(number: number),
+  );
+
+  static final name = Lens<Foo, String>(
+    (nameContainer) => nameContainer.name,
+    (nameContainer, name) => nameContainer.copyWith(name: name),
+  );
+
   static final enu = Lens<Foo, my_types.Enum?>(
-      (s_) => s_.enu, (s_, enu) => s_.copyWith(enu: enu));
+    (enuContainer) => enuContainer.enu,
+    (enuContainer, enu) => enuContainer.copyWith(enu: enu),
+  );
 }
 
-// ignore_for_file: join_return_with_assignment
-// ignore_for_file: avoid_classes_with_only_static_members
-// ignore_for_file: non_constant_identifier_names
-// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Bar {
   const $Bar();
+
   Foo get foo;
   List<Foo> get foos;
   String get driver;
   String? get cache;
+
   Bar copyWith({Foo? foo, List<Foo>? foos, String? driver, String? cache}) =>
       Bar(
           foo: foo ?? this.foo,
           foos: foos ?? this.foos,
           driver: driver ?? this.driver,
           cache: cache ?? this.cache);
+
   @override
   String toString() =>
       "Bar(foo: $foo, foos: $foos, driver: $driver, cache: $cache)";
+
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
       other is Bar &&
       other.runtimeType == runtimeType &&
@@ -74,7 +87,9 @@ abstract class $Bar {
       const DeepCollectionEquality().equals(foos, other.foos) &&
       const MyEquality<String>().equals(driver, other.driver) &&
       const Ignore().equals(cache, other.cache);
+
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode {
     var result = 17;
     result = 37 * result + foo.hashCode;
@@ -85,42 +100,59 @@ abstract class $Bar {
   }
 }
 
+// ignore: avoid_classes_with_only_static_members
 class Bar$ {
-  static final foo =
-      Lens<Bar, Foo>((s_) => s_.foo, (s_, foo) => s_.copyWith(foo: foo));
+  static final foo = Lens<Bar, Foo>(
+    (fooContainer) => fooContainer.foo,
+    (fooContainer, foo) => fooContainer.copyWith(foo: foo),
+  );
+
   static final foos = Lens<Bar, List<Foo>>(
-      (s_) => s_.foos, (s_, foos) => s_.copyWith(foos: foos));
+    (foosContainer) => foosContainer.foos,
+    (foosContainer, foos) => foosContainer.copyWith(foos: foos),
+  );
+
   static final driver = Lens<Bar, String>(
-      (s_) => s_.driver, (s_, driver) => s_.copyWith(driver: driver));
+    (driverContainer) => driverContainer.driver,
+    (driverContainer, driver) => driverContainer.copyWith(driver: driver),
+  );
+
   static final cache = Lens<Bar, String?>(
-      (s_) => s_.cache, (s_, cache) => s_.copyWith(cache: cache));
+    (cacheContainer) => cacheContainer.cache,
+    (cacheContainer, cache) => cacheContainer.copyWith(cache: cache),
+  );
 }
 
-// ignore_for_file: join_return_with_assignment
-// ignore_for_file: avoid_classes_with_only_static_members
-// ignore_for_file: non_constant_identifier_names
-// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 abstract class $Baz {
   const $Baz();
+
   math.Point get prefixedField;
+
   Baz copyWith({math.Point? prefixedField}) =>
       Baz(prefixedField: prefixedField ?? this.prefixedField);
+
   @override
   String toString() => "Baz(prefixedField: $prefixedField)";
+
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
       other is Baz &&
       other.runtimeType == runtimeType &&
       prefixedField == other.prefixedField;
+
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode {
-    var result = 17;
-    result = 37 * result + prefixedField.hashCode;
-    return result;
+    return prefixedField.hashCode;
   }
 }
 
+// ignore: avoid_classes_with_only_static_members
 class Baz$ {
-  static final prefixedField = Lens<Baz, math.Point>((s_) => s_.prefixedField,
-      (s_, prefixedField) => s_.copyWith(prefixedField: prefixedField));
+  static final prefixedField = Lens<Baz, math.Point>(
+    (prefixedFieldContainer) => prefixedFieldContainer.prefixedField,
+    (prefixedFieldContainer, prefixedField) =>
+        prefixedFieldContainer.copyWith(prefixedField: prefixedField),
+  );
 }

@@ -1,3 +1,9 @@
+## 1.0.1
+
+- Updated dependencies
+- Improved formatting of generated code for better readability
+- Only suppress warnings in generated code where needed
+
 ## 1.0.0
 
 - Fix handling of prefixed types
