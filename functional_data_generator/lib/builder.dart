@@ -1,9 +1,8 @@
-// @dart=2.11
-
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
+import 'package:collection/collection.dart';
 import 'package:functional_data/functional_data.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -15,33 +14,33 @@ class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
       _generateDataType(element);
 }
 
-String _getCustomEquality(List<ElementAnnotation> annotations) {
-  final annotation = annotations.firstWhere(
-      (a) => a.computeConstantValue().type.getDisplayString(withNullability: false) == "CustomEquality",
-      orElse: () => null);
+String? _getCustomEquality(List<ElementAnnotation> annotations) {
+  final annotation = annotations.firstWhereOrNull(
+      (a) => a.computeConstantValue()?.type?.getDisplayString(withNullability: false) == "CustomEquality");
   if (annotation != null) {
     final source = annotation.toSource();
     return source.substring("@CustomEquality(".length, source.length - 1).replaceAll('?', '');
-  } else
+  } else {
     return null;
+  }
 }
 
 Future<String> _generateDataType(Element element) async {
   if (element is! ClassElement) throw Exception('FunctionalData annotation must only be used on classes');
 
-  final resolvedLibrary = await element.session.getResolvedLibraryByElement2(element.library) as ResolvedLibraryResult;
-  resolvedLibrary.getElementDeclaration(element).node;
+  final resolvedLibrary =
+      await element.session?.getResolvedLibraryByElement2(element.library) as ResolvedLibraryResult?;
 
   final className = element.name.replaceAll('\$', '');
 
-  final classElement = element as ClassElement;
+  final classElement = element;
 
   final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
+    final declaration = resolvedLibrary?.getElementDeclaration(f)?.node as VariableDeclaration?;
+    final declarationList = declaration?.parent as VariableDeclarationList?;
     return Field(
       f.name,
-      ((resolvedLibrary.getElementDeclaration(f).node as VariableDeclaration).parent as VariableDeclarationList)
-          .type
-          .toSource(),
+      declarationList?.type?.toSource() ?? 'dynamic',
       _getCustomEquality(f.metadata),
     );
   });
@@ -49,8 +48,8 @@ Future<String> _generateDataType(Element element) async {
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString =
       '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
-  final copyWith =
-      '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')}}) => $className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', \n')});';
+  final copyWith = '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')}}) =>\n'
+      '$className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', \n')});';
 
   final suppressMutableClass = '  // ignore: avoid_equals_and_hash_code_on_mutable_classes';
   final equality = '@override\n$suppressMutableClass\nbool operator ==(Object other) => ${([
@@ -82,8 +81,9 @@ Future<String> _generateDataType(Element element) async {
 
   final constructor = 'const \$$className();';
 
-  final dataClass =
-      'abstract class \$$className { $constructor \n\n ${fieldDeclarations.join()} \n\n $copyWith \n\n $toString \n\n $equality \n\n $hash }\n\n';
+  final dataClass = 'abstract class \$$className {\n'
+      '$constructor \n\n ${fieldDeclarations.join()} \n\n $copyWith \n\n $toString \n\n $equality \n\n $hash\n'
+      '}\n\n';
 
   const suppressClassWithStatics = '// ignore: avoid_classes_with_only_static_members';
   final lensesClass = '$suppressClassWithStatics\nclass $className\$ { ${lenses.join()} }\n\n';
@@ -112,7 +112,7 @@ class Field {
   final String type;
 
   String get optionalType => type[type.length - 1] == '?' ? type : "$type?";
-  final String customEquality;
+  final String? customEquality;
 
   const Field(this.name, this.type, this.customEquality);
 }
