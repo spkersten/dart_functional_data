@@ -1,6 +1,5 @@
 name: Master validation
 on:
-  pull_request:
   schedule:
     # Daily at 1pm
     - cron: 0 13 * * *
