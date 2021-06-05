@@ -3,6 +3,7 @@ on:
   schedule:
     # Daily at 1pm
     - cron: 0 13 * * *
+  workflow_dispatch:
 jobs:
   check_code_generation:
     runs-on: ubuntu-latest
