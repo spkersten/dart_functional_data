@@ -35,3 +35,20 @@ jobs:
           dart format -l 120 **/*.g.dart
       - name: Check generate code was committed
         run: git diff --exit-code **/*.g.dart
+  check_quality:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter pub get
+        working-directory: functional_data
+      - run: flutter pub get
+        working-directory: functional_data_generator
+      - run: flutter pub get
+        working-directory: example
+      - run: flutter analyze
