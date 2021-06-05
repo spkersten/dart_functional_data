@@ -1,4 +1,4 @@
-name: Master validation
+name: Build
 on:
   schedule:
     # Daily at 1pm

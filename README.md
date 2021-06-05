@@ -1,4 +1,6 @@
-# functional_data
+# Functional Data
+
+![Build](https://github.com/spkersten/dart_functional_data/actions/workflows/master_validation.yml/badge.svg?branch=master)
 
 Simple and non-intrusive code generator for boilerplate of data types. The package generates a simple mixin with 
 `operator==`, `hashCode`, `copyWith`, `toString`, as well as lenses.
