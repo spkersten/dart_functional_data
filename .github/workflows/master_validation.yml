@@ -1,0 +1,33 @@
+name: Master validation
+on:
+  pull_request:
+  schedule:
+    # Daily at 1pm
+    - cron: 0 13 * * *
+jobs:
+  check_code_generation:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: example
+    strategy:
+      matrix:
+        flutter_version: [ '' ]  # Latest
+        flutter_channel: [ 'stable', 'beta' ]
+        include:
+          - flutter_version: '2.2.0'
+            flutter_channel: 'stable'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: ${{ matrix.flutter_channel }}
+          flutter-version: ${{ matrix.flutter_version }}
+      - run: flutter --version
+      - run: flutter pub get
+      - name: Check code generation works
+        run: |
+          flutter pub run build_runner build --delete-conflicting-outputs bin
+          dart format -l 120 **/*.g.dart
+      - name: Check generate code was not changed
+        run: git diff --exit-code **/*.g.dart
