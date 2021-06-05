@@ -1,0 +1,32 @@
+include: all_lint_rules.yaml
+analyzer:
+  exclude:
+    - example/**
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    included_file_warning: ignore
+
+linter:
+  rules:
+    # Conflicts with prefer single quotes
+    prefer_double_quotes: false
+
+    # Prefer to omit them
+    always_specify_types: false
+
+    # Nothing is public
+    public_member_api_docs: false
+
+    # 120 is used as line length
+    lines_longer_than_80_chars: false
+
+    # Using immutability makes for more readable code
+    unnecessary_final: false
+
+    # I find this less clear than escaped characters
+    use_raw_strings: false
+
+    # Weird rule
+    avoid_as: false

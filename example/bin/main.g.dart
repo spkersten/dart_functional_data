@@ -13,10 +13,8 @@ abstract class $Foo {
   String get name;
   my_types.Enum? get enu;
 
-  Foo copyWith({int? number, String? name, my_types.Enum? enu}) => Foo(
-      number: number ?? this.number,
-      name: name ?? this.name,
-      enu: enu ?? this.enu);
+  Foo copyWith({int? number, String? name, my_types.Enum? enu}) =>
+      Foo(number: number ?? this.number, name: name ?? this.name, enu: enu ?? this.enu);
 
   @override
   String toString() => "Foo(number: $number, name: $name, enu: $enu)";
@@ -68,15 +66,10 @@ abstract class $Bar {
   String? get cache;
 
   Bar copyWith({Foo? foo, List<Foo>? foos, String? driver, String? cache}) =>
-      Bar(
-          foo: foo ?? this.foo,
-          foos: foos ?? this.foos,
-          driver: driver ?? this.driver,
-          cache: cache ?? this.cache);
+      Bar(foo: foo ?? this.foo, foos: foos ?? this.foos, driver: driver ?? this.driver, cache: cache ?? this.cache);
 
   @override
-  String toString() =>
-      "Bar(foo: $foo, foos: $foos, driver: $driver, cache: $cache)";
+  String toString() => "Bar(foo: $foo, foos: $foos, driver: $driver, cache: $cache)";
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -128,8 +121,7 @@ abstract class $Baz {
 
   math.Point get prefixedField;
 
-  Baz copyWith({math.Point? prefixedField}) =>
-      Baz(prefixedField: prefixedField ?? this.prefixedField);
+  Baz copyWith({math.Point? prefixedField}) => Baz(prefixedField: prefixedField ?? this.prefixedField);
 
   @override
   String toString() => "Baz(prefixedField: $prefixedField)";
@@ -137,9 +129,7 @@ abstract class $Baz {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
-      other is Baz &&
-      other.runtimeType == runtimeType &&
-      prefixedField == other.prefixedField;
+      other is Baz && other.runtimeType == runtimeType && prefixedField == other.prefixedField;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -152,7 +142,6 @@ abstract class $Baz {
 class Baz$ {
   static final prefixedField = Lens<Baz, math.Point>(
     (prefixedFieldContainer) => prefixedFieldContainer.prefixedField,
-    (prefixedFieldContainer, prefixedField) =>
-        prefixedFieldContainer.copyWith(prefixedField: prefixedField),
+    (prefixedFieldContainer, prefixedField) => prefixedFieldContainer.copyWith(prefixedField: prefixedField),
   );
 }

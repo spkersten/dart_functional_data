@@ -1,0 +1,54 @@
+name: PR validation
+on: [pull_request]
+jobs:
+  check_formatting:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter pub get
+        working-directory: functional_data
+      - run: flutter pub get
+        working-directory: functional_data_generator
+      - run: flutter pub get
+        working-directory: example
+      - run: dart format -o none -l 120 --set-exit-if-changed .
+  check_code_generation:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: example
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter pub get
+      - name: Generate code
+        run: |
+          flutter pub run build_runner build --delete-conflicting-outputs bin
+          dart format -l 120 **/*.g.dart
+      - name: Check generate code was committed
+        run: git diff --exit-code **/*.g.dart
+  check_quality:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter pub get
+        working-directory: functional_data
+      - run: flutter pub get
+        working-directory: functional_data_generator
+      - run: flutter pub get
+        working-directory: example
+      - run: flutter analyze

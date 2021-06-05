@@ -16,17 +16,19 @@ class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
 
 String? _getCustomEquality(List<ElementAnnotation> annotations) {
   final annotation = annotations.firstWhereOrNull(
-      (a) => a.computeConstantValue()?.type?.getDisplayString(withNullability: false) == "CustomEquality");
+      (a) => a.computeConstantValue()?.type?.getDisplayString(withNullability: false) == 'CustomEquality');
   if (annotation != null) {
     final source = annotation.toSource();
-    return source.substring("@CustomEquality(".length, source.length - 1).replaceAll('?', '');
+    return source.substring('@CustomEquality('.length, source.length - 1).replaceAll('?', '');
   } else {
     return null;
   }
 }
 
 Future<String> _generateDataType(Element element) async {
-  if (element is! ClassElement) throw Exception('FunctionalData annotation must only be used on classes');
+  if (element is! ClassElement) {
+    throw Exception('FunctionalData annotation must only be used on classes');
+  }
 
   final resolvedLibrary =
       await element.session?.getResolvedLibraryByElement2(element.library) as ResolvedLibraryResult?;
@@ -51,11 +53,11 @@ Future<String> _generateDataType(Element element) async {
   final copyWith = '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')}}) =>\n'
       '$className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', \n')});';
 
-  final suppressMutableClass = '  // ignore: avoid_equals_and_hash_code_on_mutable_classes';
+  const suppressMutableClass = '  // ignore: avoid_equals_and_hash_code_on_mutable_classes';
   final equality = '@override\n$suppressMutableClass\nbool operator ==(Object other) => ${([
         'other is $className',
         'other.runtimeType == runtimeType'
-      ] + fields.map((f) => '${_generateEquality(f)}').toList()).join(' && \n')};';
+      ] + fields.map(_generateEquality).toList()).join(' && \n')};';
 
   String hashBody;
   if (fields.isEmpty) {
@@ -108,11 +110,11 @@ String _generateHash(Field f) {
 }
 
 class Field {
+  const Field(this.name, this.type, this.customEquality);
+
   final String name;
   final String type;
 
-  String get optionalType => type[type.length - 1] == '?' ? type : "$type?";
+  String get optionalType => type[type.length - 1] == '?' ? type : '$type?';
   final String? customEquality;
-
-  const Field(this.name, this.type, this.customEquality);
 }
