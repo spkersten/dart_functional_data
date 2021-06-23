@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
@@ -11,7 +10,7 @@ Builder functionalData(BuilderOptions options) => SharedPartBuilder([FunctionalD
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
   Future<String> generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) =>
-      _generateDataType(element);
+      _generateDataType(element, buildStep);
 }
 
 String? _getCustomEquality(List<ElementAnnotation> annotations) {
@@ -25,27 +24,24 @@ String? _getCustomEquality(List<ElementAnnotation> annotations) {
   }
 }
 
-Future<String> _generateDataType(Element element) async {
+Future<String> _generateDataType(Element element, BuildStep buildStep) async {
   if (element is! ClassElement) {
     throw Exception('FunctionalData annotation must only be used on classes');
   }
-
-  final resolvedLibrary =
-      await element.session?.getResolvedLibraryByElement2(element.library) as ResolvedLibraryResult?;
 
   final className = element.name.replaceAll('\$', '');
 
   final classElement = element;
 
-  final fields = classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) {
-    final declaration = resolvedLibrary?.getElementDeclaration(f)?.node as VariableDeclaration?;
+  final fields = await Future.wait(classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) async {
+    final declaration = await buildStep.resolver.astNodeFor(f) as VariableDeclaration?;
     final declarationList = declaration?.parent as VariableDeclarationList?;
     return Field(
       f.name,
       declarationList?.type?.toSource() ?? 'dynamic',
       _getCustomEquality(f.metadata),
     );
-  });
+  }));
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString =
