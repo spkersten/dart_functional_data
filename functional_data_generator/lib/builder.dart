@@ -24,6 +24,13 @@ String? _getCustomEquality(List<ElementAnnotation> annotations) {
   }
 }
 
+class Pair<T, S> {
+  Pair(this.first, this.second);
+
+  final T first;
+  final S second;
+}
+
 Future<String> _generateDataType(Element element, BuildStep buildStep) async {
   if (element is! ClassElement) {
     throw Exception('FunctionalData annotation must only be used on classes');
@@ -33,21 +40,32 @@ Future<String> _generateDataType(Element element, BuildStep buildStep) async {
 
   final classElement = element;
 
-  final fields = await Future.wait(classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) async {
+  // The one that can be used to specify every field
+  final genericConstructor = classElement.constructors.firstWhere((element) => element.name.isEmpty);
+  final positionalFields = genericConstructor.parameters.where((p) => p.isPositional).map((p) => p.name).toList();
+
+  final fieldsWithIndex =
+      await Future.wait(classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) async {
     final declaration = await buildStep.resolver.astNodeFor(f) as VariableDeclaration?;
     final declarationList = declaration?.parent as VariableDeclarationList?;
-    return Field(
-      f.name,
-      declarationList?.type?.toSource() ?? 'dynamic',
-      _getCustomEquality(f.metadata),
+    final positionalIndex = positionalFields.indexOf(f.name);
+    return Pair(
+      positionalIndex == -1 ? 9999 : positionalIndex,
+      Field(
+        f.name,
+        declarationList?.type?.toSource() ?? 'dynamic',
+        _getCustomEquality(f.metadata),
+        isPositional: positionalIndex != -1,
+      ),
     );
   }));
+  final fields = fieldsWithIndex.sortedBy<num>((element) => element.first).map((e) => e.second).toList();
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString =
       '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
   final copyWith = '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')},\n}) =>\n'
-      '$className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', \n')},\n);';
+      '$className(${fields.map((f) => '${f.asConstructorParameterLabel}${f.name} ?? this.${f.name}').join(', \n')},\n);';
 
   final copyUsing = '$className copyUsing(void Function($className\$Change change) mutator) {\n'
       'final change = $className\$Change._(\n'
@@ -55,7 +73,7 @@ Future<String> _generateDataType(Element element, BuildStep buildStep) async {
       ');\n'
       'mutator(change);\n'
       'return $className(\n'
-      '${fields.map((f) => '${f.name}: change.${f.name},\n').join()}'
+      '${fields.map((f) => '${f.asConstructorParameterLabel}change.${f.name},\n').join()}'
       ');\n'
       '}';
 
@@ -123,11 +141,16 @@ String _generateHash(Field f) {
 }
 
 class Field {
-  const Field(this.name, this.type, this.customEquality);
+  const Field(this.name, this.type, this.customEquality, {required this.isPositional});
 
   final String name;
   final String type;
+  final bool isPositional;
 
   String get optionalType => type[type.length - 1] == '?' ? type : '$type?';
   final String? customEquality;
+}
+
+extension AsConstructorParameter on Field {
+  String get asConstructorParameterLabel => isPositional ? '' : '$name: ';
 }

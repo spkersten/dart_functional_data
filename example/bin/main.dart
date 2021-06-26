@@ -9,8 +9,8 @@ part 'main.g.dart';
 // Only requirement is that it has a constructor with named arguments for all fields
 @FunctionalData()
 class Foo extends $Foo {
-  final int number;
   final String name;
+  final int number;
   final my_types.Enum? enu;
 
   String get displayString => "$name[$number]";
@@ -46,7 +46,11 @@ class Bar extends $Bar {
   @CustomEquality(Ignore())
   final String? cache;
 
-  const Bar({required this.foo, required this.foos, required this.driver, this.cache = null});
+  // Note that foos and foo are positional and have different order than the fields
+  const Bar(this.foos, this.foo, {required this.driver, this.cache = null});
+
+  // will be ignored
+  const Bar.otherConstructor({required this.foo, this.foos = const [], this.driver = "", this.cache = null});
 }
 
 @FunctionalData()
@@ -58,7 +62,7 @@ class Baz extends $Baz {
 
 main(List<String> arguments) {
   final foo = Foo(number: 42, name: "Marvin");
-  final bar = Bar(foo: foo, foos: [Foo(number: 101, name: "One"), Foo(number: 102, name: "Two")], driver: "One");
+  final bar = Bar([Foo(number: 101, name: "One"), Foo(number: 102, name: "Two")], foo, driver: "One");
 
   print(foo.copyUsing((change) => change..number = 101));
   print(Foo(number: 1, name: "sdf", enu: my_types.Enum.a).copyUsing(

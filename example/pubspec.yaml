@@ -12,3 +12,7 @@ dev_dependencies:
   build_resolvers: ">=2.0.0"
   functional_data_generator:
     path: ../functional_data_generator
+
+dependency_overrides:
+  functional_data:
+    path: ../functional_data

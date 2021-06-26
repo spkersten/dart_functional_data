@@ -1,6 +1,7 @@
 ## 1.1.0
 
 - Add copyUsing to allow creating a copy where a nullable field is set to null
+- Allow positional arguments in the constructor used by copyWith/copyUsing
 
 ## 1.0.2
 
