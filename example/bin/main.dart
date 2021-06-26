@@ -60,6 +60,13 @@ main(List<String> arguments) {
   final foo = Foo(number: 42, name: "Marvin");
   final bar = Bar(foo: foo, foos: [Foo(number: 101, name: "One"), Foo(number: 102, name: "Two")], driver: "One");
 
+  print(foo.copyUsing((change) => change..number = 101));
+  print(Foo(number: 1, name: "sdf", enu: my_types.Enum.a).copyUsing(
+    (change) => change
+      ..name = "Bla"
+      ..enu = null,
+  ));
+
   final fooName = Bar$.foo.then(Foo$.name);
   // print(fooName.map((name) => name.toUpperCase(), bar));
   print(fooName.of(bar).map((name) => name.toUpperCase()));

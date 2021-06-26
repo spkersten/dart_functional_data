@@ -46,8 +46,18 @@ Future<String> _generateDataType(Element element, BuildStep buildStep) async {
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString =
       '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
-  final copyWith = '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')}}) =>\n'
-      '$className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', \n')});';
+  final copyWith = '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')},\n}) =>\n'
+      '$className(${fields.map((f) => '${f.name}: ${f.name} ?? this.${f.name}').join(', \n')},\n);';
+
+  final copyUsing = '$className copyUsing(void Function($className\$Change change) mutator) {\n'
+      'final change = $className\$Change._(\n'
+      '${fields.map((f) => 'this.${f.name},\n').join()}'
+      ');\n'
+      'mutator(change);\n'
+      'return $className(\n'
+      '${fields.map((f) => '${f.name}: change.${f.name},\n').join()}'
+      ');\n'
+      '}';
 
   const suppressMutableClass = '  // ignore: avoid_equals_and_hash_code_on_mutable_classes';
   final equality = '@override\n$suppressMutableClass\nbool operator ==(Object other) => ${([
@@ -80,13 +90,20 @@ Future<String> _generateDataType(Element element, BuildStep buildStep) async {
   final constructor = 'const \$$className();';
 
   final dataClass = 'abstract class \$$className {\n'
-      '$constructor \n\n ${fieldDeclarations.join()} \n\n $copyWith \n\n $toString \n\n $equality \n\n $hash\n'
+      '$constructor \n\n ${fieldDeclarations.join()} \n\n $copyWith \n\n $copyUsing \n\n $toString \n\n $equality \n\n $hash\n'
+      '}\n\n';
+
+  final changeConstructor = '$className\$Change._(\n${fields.map((f) => 'this.${f.name}').join(',\n')},\n);';
+  final changeFieldDeclarations = fields.map((f) => '${f.type} ${f.name};');
+  final changeClass = 'class $className\$Change {\n'
+      '$changeConstructor\n\n'
+      '${changeFieldDeclarations.join('\n')}\n'
       '}\n\n';
 
   const suppressClassWithStatics = '// ignore: avoid_classes_with_only_static_members';
   final lensesClass = '$suppressClassWithStatics\nclass $className\$ { ${lenses.join()} }\n\n';
 
-  return '$dataClass $lensesClass';
+  return '$dataClass $changeClass $lensesClass';
 }
 
 String _generateEquality(Field f) {

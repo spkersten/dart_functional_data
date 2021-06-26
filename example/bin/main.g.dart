@@ -13,8 +13,30 @@ abstract class $Foo {
   String get name;
   my_types.Enum? get enu;
 
-  Foo copyWith({int? number, String? name, my_types.Enum? enu}) =>
-      Foo(number: number ?? this.number, name: name ?? this.name, enu: enu ?? this.enu);
+  Foo copyWith({
+    int? number,
+    String? name,
+    my_types.Enum? enu,
+  }) =>
+      Foo(
+        number: number ?? this.number,
+        name: name ?? this.name,
+        enu: enu ?? this.enu,
+      );
+
+  Foo copyUsing(void Function(Foo$Change change) mutator) {
+    final change = Foo$Change._(
+      this.number,
+      this.name,
+      this.enu,
+    );
+    mutator(change);
+    return Foo(
+      number: change.number,
+      name: change.name,
+      enu: change.enu,
+    );
+  }
 
   @override
   String toString() => "Foo(number: $number, name: $name, enu: $enu)";
@@ -37,6 +59,18 @@ abstract class $Foo {
     result = 37 * result + enu.hashCode;
     return result;
   }
+}
+
+class Foo$Change {
+  Foo$Change._(
+    this.number,
+    this.name,
+    this.enu,
+  );
+
+  int number;
+  String name;
+  my_types.Enum? enu;
 }
 
 // ignore: avoid_classes_with_only_static_members
@@ -65,11 +99,38 @@ abstract class $Bar {
   String get driver;
   String? get cache;
 
-  Bar copyWith({Foo? foo, List<Foo>? foos, String? driver, String? cache}) =>
-      Bar(foo: foo ?? this.foo, foos: foos ?? this.foos, driver: driver ?? this.driver, cache: cache ?? this.cache);
+  Bar copyWith({
+    Foo? foo,
+    List<Foo>? foos,
+    String? driver,
+    String? cache,
+  }) =>
+      Bar(
+        foo: foo ?? this.foo,
+        foos: foos ?? this.foos,
+        driver: driver ?? this.driver,
+        cache: cache ?? this.cache,
+      );
+
+  Bar copyUsing(void Function(Bar$Change change) mutator) {
+    final change = Bar$Change._(
+      this.foo,
+      this.foos,
+      this.driver,
+      this.cache,
+    );
+    mutator(change);
+    return Bar(
+      foo: change.foo,
+      foos: change.foos,
+      driver: change.driver,
+      cache: change.cache,
+    );
+  }
 
   @override
-  String toString() => "Bar(foo: $foo, foos: $foos, driver: $driver, cache: $cache)";
+  String toString() =>
+      "Bar(foo: $foo, foos: $foos, driver: $driver, cache: $cache)";
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -91,6 +152,20 @@ abstract class $Bar {
     result = 37 * result + const Ignore().hash(cache);
     return result;
   }
+}
+
+class Bar$Change {
+  Bar$Change._(
+    this.foo,
+    this.foos,
+    this.driver,
+    this.cache,
+  );
+
+  Foo foo;
+  List<Foo> foos;
+  String driver;
+  String? cache;
 }
 
 // ignore: avoid_classes_with_only_static_members
@@ -121,7 +196,22 @@ abstract class $Baz {
 
   math.Point get prefixedField;
 
-  Baz copyWith({math.Point? prefixedField}) => Baz(prefixedField: prefixedField ?? this.prefixedField);
+  Baz copyWith({
+    math.Point? prefixedField,
+  }) =>
+      Baz(
+        prefixedField: prefixedField ?? this.prefixedField,
+      );
+
+  Baz copyUsing(void Function(Baz$Change change) mutator) {
+    final change = Baz$Change._(
+      this.prefixedField,
+    );
+    mutator(change);
+    return Baz(
+      prefixedField: change.prefixedField,
+    );
+  }
 
   @override
   String toString() => "Baz(prefixedField: $prefixedField)";
@@ -129,7 +219,9 @@ abstract class $Baz {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
-      other is Baz && other.runtimeType == runtimeType && prefixedField == other.prefixedField;
+      other is Baz &&
+      other.runtimeType == runtimeType &&
+      prefixedField == other.prefixedField;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -138,10 +230,19 @@ abstract class $Baz {
   }
 }
 
+class Baz$Change {
+  Baz$Change._(
+    this.prefixedField,
+  );
+
+  math.Point prefixedField;
+}
+
 // ignore: avoid_classes_with_only_static_members
 class Baz$ {
   static final prefixedField = Lens<Baz, math.Point>(
     (prefixedFieldContainer) => prefixedFieldContainer.prefixedField,
-    (prefixedFieldContainer, prefixedField) => prefixedFieldContainer.copyWith(prefixedField: prefixedField),
+    (prefixedFieldContainer, prefixedField) =>
+        prefixedFieldContainer.copyWith(prefixedField: prefixedField),
   );
 }

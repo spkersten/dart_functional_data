@@ -1,3 +1,7 @@
+## 1.1.0
+
+- Add copyUsing to allow creating a copy where a nullable field is set to null
+
 ## 1.0.2
 
 - Fix InconsistentAnalysisException
