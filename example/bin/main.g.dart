@@ -129,8 +129,7 @@ abstract class $Bar {
   }
 
   @override
-  String toString() =>
-      "Bar(foos: $foos, foo: $foo, driver: $driver, cache: $cache)";
+  String toString() => "Bar(foos: $foos, foo: $foo, driver: $driver, cache: $cache)";
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -219,9 +218,7 @@ abstract class $Baz {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
-      other is Baz &&
-      other.runtimeType == runtimeType &&
-      prefixedField == other.prefixedField;
+      other is Baz && other.runtimeType == runtimeType && prefixedField == other.prefixedField;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -242,7 +239,6 @@ class Baz$Change {
 class Baz$ {
   static final prefixedField = Lens<Baz, math.Point>(
     (prefixedFieldContainer) => prefixedFieldContainer.prefixedField,
-    (prefixedFieldContainer, prefixedField) =>
-        prefixedFieldContainer.copyWith(prefixedField: prefixedField),
+    (prefixedFieldContainer, prefixedField) => prefixedFieldContainer.copyWith(prefixedField: prefixedField),
   );
 }
