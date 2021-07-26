@@ -59,7 +59,9 @@ Future<String> _generateDataType(Element element, BuildStep buildStep) async {
       ),
     );
   }));
-  final fields = fieldsWithIndex.sortedBy<num>((element) => element.first).map((e) => e.second).toList();
+  // Using merge sort so the sorting is stable and doesn't change the order of non-positional parameters
+  mergeSort<Pair<int, Field>>(fieldsWithIndex, compare: (a, b) => a.first.compareTo(b.first));
+  final fields = fieldsWithIndex.map((e) => e.second).toList();
 
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
   final toString =

@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Fix order of fields in generated code
+
 ## 1.1.0
 
 - Add copyUsing to allow creating a copy where a nullable field is set to null

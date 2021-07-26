@@ -1,5 +1,5 @@
 name: functional_data_generator
-version: 1.1.0
+version: 1.1.1
 description: >-
   Simple and non-intrusive code generator for boilerplate of data types.
 homepage: https://github.com/spkersten/dart_functional_data
