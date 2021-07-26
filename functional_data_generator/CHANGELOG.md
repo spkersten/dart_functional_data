@@ -1,3 +1,7 @@
+## 1.1.2
+
+- Fix custom equality object sometimes not constructed with const
+
 ## 1.1.1
 
 - Fix order of fields in generated code

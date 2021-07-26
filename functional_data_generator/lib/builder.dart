@@ -18,7 +18,12 @@ String? _getCustomEquality(List<ElementAnnotation> annotations) {
       (a) => a.computeConstantValue()?.type?.getDisplayString(withNullability: false) == 'CustomEquality');
   if (annotation != null) {
     final source = annotation.toSource();
-    return source.substring('@CustomEquality('.length, source.length - 1).replaceAll('?', '');
+    final customEquality = source.substring('@CustomEquality('.length, source.length - 1).replaceAll('?', '');
+    if (!customEquality.startsWith('const ')) {
+      return 'const $customEquality';
+    } else {
+      return customEquality;
+    }
   } else {
     return null;
   }
