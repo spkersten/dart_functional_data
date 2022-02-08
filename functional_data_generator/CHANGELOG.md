@@ -1,3 +1,7 @@
+## 1.1.3
+
+- Update analyzer dependency to >=2.0.0 <4.0.0
+
 ## 1.1.2
 
 - Fix custom equality object sometimes not constructed with const
