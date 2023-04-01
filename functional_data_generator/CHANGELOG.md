@@ -1,3 +1,7 @@
+## 1.1.5
+
+- Update analyzer dependency to >=2.0.0 <6.0.0
+
 ## 1.1.4
 
 - Update analyzer dependency to >=2.0.0 <5.0.0
