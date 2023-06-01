@@ -6,8 +6,8 @@ part of 'main.dart';
 // FunctionalDataGenerator
 // **************************************************************************
 
-abstract class $Foo {
-  const $Foo();
+abstract class _$Foo {
+  const _$Foo();
 
   String get name;
   int get number;
@@ -24,8 +24,8 @@ abstract class $Foo {
         enu: enu ?? this.enu,
       );
 
-  Foo copyUsing(void Function(Foo$Change change) mutator) {
-    final change = Foo$Change._(
+  Foo copyUsing(void Function(_Foo$Change change) mutator) {
+    final change = _Foo$Change._(
       this.name,
       this.number,
       this.enu,
@@ -61,8 +61,8 @@ abstract class $Foo {
   }
 }
 
-class Foo$Change {
-  Foo$Change._(
+class _Foo$Change {
+  _Foo$Change._(
     this.name,
     this.number,
     this.enu,
@@ -91,8 +91,8 @@ class Foo$ {
   );
 }
 
-abstract class $Bar {
-  const $Bar();
+abstract class _$Bar {
+  const _$Bar();
 
   List<Foo> get foos;
   Foo get foo;
@@ -113,7 +113,8 @@ abstract class $Bar {
       );
 
   @override
-  String toString() => "Bar(foos: $foos, foo: $foo, driver: $driver, cache: $cache)";
+  String toString() =>
+      "Bar(foos: $foos, foo: $foo, driver: $driver, cache: $cache)";
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -160,8 +161,8 @@ class Bar$ {
   );
 }
 
-abstract class $Baz {
-  const $Baz();
+abstract class _$Baz {
+  const _$Baz();
 
   math.Point get prefixedField;
 
@@ -171,7 +172,9 @@ abstract class $Baz {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
-      other is Baz && other.runtimeType == runtimeType && prefixedField == other.prefixedField;
+      other is Baz &&
+      other.runtimeType == runtimeType &&
+      prefixedField == other.prefixedField;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes

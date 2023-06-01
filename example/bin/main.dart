@@ -12,7 +12,7 @@ part 'main.g.dart';
   generateCopyWith: false,
   generateLenses: true,
 )
-class Foo extends $Foo {
+class Foo extends _$Foo {
   final String name;
   final int number;
   final my_types.Enum? enu;
@@ -39,7 +39,7 @@ class MyEquality<T> implements Equality {
   generateCopyUsing: false,
   generateLenses: true,
 )
-class Bar extends $Bar {
+class Bar extends _$Bar {
   final Foo foo;
 
   static const int constant = 5;
@@ -63,7 +63,7 @@ class Bar extends $Bar {
 @FunctionalData(
   generateCopy: false,
 )
-class Baz extends $Baz {
+class Baz extends _$Baz {
   final math.Point prefixedField;
 
   const Baz({required this.prefixedField});

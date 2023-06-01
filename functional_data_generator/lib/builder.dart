@@ -84,14 +84,15 @@ Future<String> _generateDataType(Element element, ConstantReader annotation, Bui
 }
 
 String _generateDataClass(String className, List<Field> fields, bool generateCopyWith, bool generateCopyUsing) {
+  final constructor = 'const _\$$className();';
+
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
-  final toString =
-      '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
+
   final copyWith = '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')},\n}) =>\n'
       '$className(${fields.map((f) => '${f.asConstructorParameterLabel}${f.name} ?? this.${f.name}').join(', \n')},\n);';
 
-  final copyUsing = '$className copyUsing(void Function($className\$Change change) mutator) {\n'
-      'final change = $className\$Change._(\n'
+  final copyUsing = '$className copyUsing(void Function(_$className\$Change change) mutator) {\n'
+      'final change = _$className\$Change._(\n'
       '${fields.map((f) => 'this.${f.name},\n').join()}'
       ');\n'
       'mutator(change);\n'
@@ -99,6 +100,9 @@ String _generateDataClass(String className, List<Field> fields, bool generateCop
       '${fields.map((f) => '${f.asConstructorParameterLabel}change.${f.name},\n').join()}'
       ');\n'
       '}';
+
+  final toString =
+      '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
 
   const suppressMutableClass = '  // ignore: avoid_equals_and_hash_code_on_mutable_classes';
   final equality = '@override\n$suppressMutableClass\nbool operator ==(Object other) => ${([
@@ -119,8 +123,6 @@ String _generateDataClass(String className, List<Field> fields, bool generateCop
 
   final hash = '@override\n$suppressMutableClass\nint get hashCode {\n$hashBody\n}';
 
-  final constructor = 'const \$$className();';
-
   final body = [
     constructor,
     fieldDeclarations.join(),
@@ -131,16 +133,16 @@ String _generateDataClass(String className, List<Field> fields, bool generateCop
     hash,
   ];
 
-  final dataClass = 'abstract class \$$className {\n'
+  final dataClass = 'abstract class _\$$className {\n'
       '${body.join(' \n\n ')}\n'
       '}\n\n';
   return dataClass;
 }
 
 String _generateChangeClass(String className, List<Field> fields) {
-  final changeConstructor = '$className\$Change._(\n${fields.map((f) => 'this.${f.name}').join(',\n')},\n);';
+  final changeConstructor = '_$className\$Change._(\n${fields.map((f) => 'this.${f.name}').join(',\n')},\n);';
   final changeFieldDeclarations = fields.map((f) => '${f.type} ${f.name};');
-  final changeClass = 'class $className\$Change {\n'
+  final changeClass = 'class _$className\$Change {\n'
       '$changeConstructor\n\n'
       '${changeFieldDeclarations.join('\n')}\n'
       '}\n\n';
