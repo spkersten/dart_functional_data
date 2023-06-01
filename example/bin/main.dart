@@ -8,7 +8,7 @@ part 'main.g.dart';
 
 // Only requirement is that it has a constructor with named arguments for all fields
 @FunctionalData()
-class Foo extends $Foo {
+class Foo extends _$Foo {
   final String name;
   final int number;
   final my_types.Enum? enu;
@@ -32,7 +32,7 @@ class MyEquality<T> implements Equality {
 }
 
 @FunctionalData()
-class Bar extends $Bar {
+class Bar extends _$Bar {
   final Foo foo;
 
   static const int constant = 5;
@@ -54,10 +54,48 @@ class Bar extends $Bar {
 }
 
 @FunctionalData()
-class Baz extends $Baz {
+class Baz extends _$Baz {
   final math.Point prefixedField;
 
   const Baz({required this.prefixedField});
+}
+
+@FunctionalData(
+  generateCopyWith: false,
+  generateLenses: false,
+)
+class FooNoCopyWith extends _$FooNoCopyWith {
+  final String field;
+
+  const FooNoCopyWith({required this.field});
+}
+
+@FunctionalData(
+  generateCopyUsing: false,
+)
+class FooNoCopyUsing extends _$FooNoCopyUsing {
+  final String field;
+
+  const FooNoCopyUsing({required this.field});
+}
+
+@FunctionalData(
+  generateCopy: false,
+  generateLenses: false,
+)
+class FooNoCopy extends _$FooNoCopy {
+  final String field;
+
+  const FooNoCopy({required this.field});
+}
+
+@FunctionalData(
+  generateLenses: false,
+)
+class FooNoLenses extends _$FooNoLenses {
+  final String field;
+
+  const FooNoLenses({required this.field});
 }
 
 main(List<String> arguments) {

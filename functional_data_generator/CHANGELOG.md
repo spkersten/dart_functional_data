@@ -1,3 +1,10 @@
+## 2.0.0
+
+- Update to dart 3
+- Support for code generation arguments that controls what features are generated
+- **[Breaking change]** Generated data class (e.g. `$Foo`) and change class (e.g. `Foo$Change`) are now private.
+  - To migrate your code change `class Foo extends $Foo` to `class Foo extends _$Foo`
+
 ## 1.1.5
 
 - Update analyzer dependency to >=2.0.0 <6.0.0

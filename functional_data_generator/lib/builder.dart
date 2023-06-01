@@ -10,7 +10,7 @@ Builder functionalData(BuilderOptions options) => SharedPartBuilder([FunctionalD
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
   Future<String> generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) =>
-      _generateDataType(element, buildStep);
+      _generateDataType(element, annotation, buildStep);
 }
 
 String? _getCustomEquality(List<ElementAnnotation> annotations) {
@@ -36,9 +36,25 @@ class Pair<T, S> {
   final S second;
 }
 
-Future<String> _generateDataType(Element element, BuildStep buildStep) async {
+Future<String> _generateDataType(Element element, ConstantReader annotation, BuildStep buildStep) async {
   if (element is! ClassElement) {
     throw Exception('FunctionalData annotation must only be used on classes');
+  }
+
+  final generateCopyParam = annotation.peek('generateCopy')?.literalValue as bool?;
+  final generateCopyWithParam = annotation.peek('generateCopyWith')?.literalValue as bool?;
+  final generateCopyUsingParam = annotation.peek('generateCopyUsing')?.literalValue as bool?;
+
+  if (generateCopyParam != null && (generateCopyWithParam != null || generateCopyUsingParam != null)) {
+    throw Exception('[$element]: generateCopy cannot be defined if generateCopyWith or generateCopyUsing are defined');
+  }
+
+  final generateLenses = annotation.peek('generateLenses')?.literalValue as bool? ?? true;
+  final generateCopyWith = generateCopyParam ?? generateCopyWithParam ?? true;
+  final generateCopyUsing = generateCopyParam ?? generateCopyUsingParam ?? true;
+
+  if (generateLenses == true && generateCopyWith == false) {
+    throw Exception('[$element]: generateLenses requires copyWith to be generated');
   }
 
   final className = element.name.replaceAll('\$', '');
@@ -68,14 +84,25 @@ Future<String> _generateDataType(Element element, BuildStep buildStep) async {
   mergeSort<Pair<int, Field>>(fieldsWithIndex, compare: (a, b) => a.first.compareTo(b.first));
   final fields = fieldsWithIndex.map((e) => e.second).toList();
 
+  final generatedClasses = <String>[
+    _generateDataClass(className, fields, generateCopyWith, generateCopyUsing),
+    if (generateCopyUsing) _generateChangeClass(className, fields),
+    if (generateLenses) _generateLenses(className, fields),
+  ];
+
+  return generatedClasses.join(' ');
+}
+
+String _generateDataClass(String className, List<Field> fields, bool generateCopyWith, bool generateCopyUsing) {
+  final constructor = 'const _\$$className();';
+
   final fieldDeclarations = fields.map((f) => '${f.type} get ${f.name};');
-  final toString =
-      '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
+
   final copyWith = '$className copyWith({${fields.map((f) => '${f.optionalType} ${f.name}').join(', ')},\n}) =>\n'
       '$className(${fields.map((f) => '${f.asConstructorParameterLabel}${f.name} ?? this.${f.name}').join(', \n')},\n);';
 
-  final copyUsing = '$className copyUsing(void Function($className\$Change change) mutator) {\n'
-      'final change = $className\$Change._(\n'
+  final copyUsing = '$className copyUsing(void Function(_$className\$Change change) mutator) {\n'
+      'final change = _$className\$Change._(\n'
       '${fields.map((f) => 'this.${f.name},\n').join()}'
       ');\n'
       'mutator(change);\n'
@@ -83,6 +110,9 @@ Future<String> _generateDataType(Element element, BuildStep buildStep) async {
       '${fields.map((f) => '${f.asConstructorParameterLabel}change.${f.name},\n').join()}'
       ');\n'
       '}';
+
+  final toString =
+      '@override\nString toString() => "$className(${fields.map((f) => '${f.name}: \$${f.name}').join(', ')})";';
 
   const suppressMutableClass = '  // ignore: avoid_equals_and_hash_code_on_mutable_classes';
   final equality = '@override\n$suppressMutableClass\nbool operator ==(Object other) => ${([
@@ -103,6 +133,35 @@ Future<String> _generateDataType(Element element, BuildStep buildStep) async {
 
   final hash = '@override\n$suppressMutableClass\nint get hashCode {\n$hashBody\n}';
 
+  final body = [
+    constructor,
+    fieldDeclarations.join(),
+    if (generateCopyWith) copyWith,
+    if (generateCopyUsing) copyUsing,
+    toString,
+    equality,
+    hash,
+  ];
+
+  final dataClass = 'abstract class _\$$className {\n'
+      '${body.join(' \n\n ')}\n'
+      '}\n\n';
+  return dataClass;
+}
+
+String _generateChangeClass(String className, List<Field> fields) {
+  final changeConstructor = '_$className\$Change._(\n${fields.map((f) => 'this.${f.name}').join(',\n')},\n);';
+  final changeFieldDeclarations = fields.map((f) => '${f.type} ${f.name};');
+  final changeClass = 'class _$className\$Change {\n'
+      '$changeConstructor\n\n'
+      '${changeFieldDeclarations.join('\n')}\n'
+      '}\n\n';
+  return changeClass;
+}
+
+String _generateLenses(String className, List<Field> fields) {
+  const suppressClassWithStatics = '// ignore: avoid_classes_with_only_static_members';
+
   final lenses = fields.map((f) {
     final name = f.name;
     final type = f.type;
@@ -111,24 +170,8 @@ Future<String> _generateDataType(Element element, BuildStep buildStep) async {
         '($containerName) => $containerName.$name,\n'
         '($containerName, $name) => $containerName.copyWith($name: $name),\n);\n\n';
   });
-
-  final constructor = 'const \$$className();';
-
-  final dataClass = 'abstract class \$$className {\n'
-      '$constructor \n\n ${fieldDeclarations.join()} \n\n $copyWith \n\n $copyUsing \n\n $toString \n\n $equality \n\n $hash\n'
-      '}\n\n';
-
-  final changeConstructor = '$className\$Change._(\n${fields.map((f) => 'this.${f.name}').join(',\n')},\n);';
-  final changeFieldDeclarations = fields.map((f) => '${f.type} ${f.name};');
-  final changeClass = 'class $className\$Change {\n'
-      '$changeConstructor\n\n'
-      '${changeFieldDeclarations.join('\n')}\n'
-      '}\n\n';
-
-  const suppressClassWithStatics = '// ignore: avoid_classes_with_only_static_members';
   final lensesClass = '$suppressClassWithStatics\nclass $className\$ { ${lenses.join()} }\n\n';
-
-  return '$dataClass $changeClass $lensesClass';
+  return lensesClass;
 }
 
 String _generateEquality(Field f) {

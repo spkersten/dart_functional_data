@@ -1,6 +1,6 @@
 # functional_data
 
-Simple and non-intrusive code generator for boilerplate of data types. The package generates a simple mixin with 
+Simple and non-intrusive code generator for boilerplate of data types. The package generates a simple mixin with
 `operator==`, `hashCode`, `copyWith`, `toString`, as well as lenses.
 
 ## Boiler plate
@@ -10,14 +10,14 @@ only have to provide a constructor with named arguments for all fields and exten
 
 ```dart
 @FunctionalData()
-class Person extends $Person {
+class Person extends _$Person {
   final String name;
   final int age;
-  
+
   const Person({this.name, this.age});
-  
+
   const Person.anonymous() : this(name: "John Doe", age: null);
-  
+
   int get ageInDays => 356 * age;
 }
 ```
@@ -64,10 +64,10 @@ create a copy of a large nested data structure with one of the fields in a leaf 
 using `then`.
 
 ```dart
-class Course extends $Course {
+class Course extends _$Course {
   final String name;
   final List<Person> students;
-  
+
   const Course({this.students});
 }
 
@@ -102,7 +102,7 @@ part 'lens.g.dart';
 
 // Only requirement is that it has a constructor with named arguments for all fields
 @FunctionalData()
-class Foo extends $Foo {
+class Foo extends _$Foo {
   final int number;
   final String name;
 
@@ -110,7 +110,7 @@ class Foo extends $Foo {
 }
 
 @FunctionalData()
-class Bar extends $Bar {
+class Bar extends _$Bar {
   final Foo foo;
 
   @CustomEquality(DeepCollectionEquality())

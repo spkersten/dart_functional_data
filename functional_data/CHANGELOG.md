@@ -1,3 +1,12 @@
+## 1.1.0
+
+- Update to dart 3
+- Add code generation arguments to control what features will be generated
+  -  generateCopy
+  -  generateCopyWith
+  -  generateCopyUsing
+  -  generateLenses
+
 ## 1.0.0
 
 - Make lenses null-safe

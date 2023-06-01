@@ -6,8 +6,8 @@ part of 'main.dart';
 // FunctionalDataGenerator
 // **************************************************************************
 
-abstract class $Foo {
-  const $Foo();
+abstract class _$Foo {
+  const _$Foo();
 
   String get name;
   int get number;
@@ -24,8 +24,8 @@ abstract class $Foo {
         enu: enu ?? this.enu,
       );
 
-  Foo copyUsing(void Function(Foo$Change change) mutator) {
-    final change = Foo$Change._(
+  Foo copyUsing(void Function(_Foo$Change change) mutator) {
+    final change = _Foo$Change._(
       this.name,
       this.number,
       this.enu,
@@ -61,8 +61,8 @@ abstract class $Foo {
   }
 }
 
-class Foo$Change {
-  Foo$Change._(
+class _Foo$Change {
+  _Foo$Change._(
     this.name,
     this.number,
     this.enu,
@@ -91,8 +91,8 @@ class Foo$ {
   );
 }
 
-abstract class $Bar {
-  const $Bar();
+abstract class _$Bar {
+  const _$Bar();
 
   List<Foo> get foos;
   Foo get foo;
@@ -112,8 +112,8 @@ abstract class $Bar {
         cache: cache ?? this.cache,
       );
 
-  Bar copyUsing(void Function(Bar$Change change) mutator) {
-    final change = Bar$Change._(
+  Bar copyUsing(void Function(_Bar$Change change) mutator) {
+    final change = _Bar$Change._(
       this.foos,
       this.foo,
       this.driver,
@@ -153,8 +153,8 @@ abstract class $Bar {
   }
 }
 
-class Bar$Change {
-  Bar$Change._(
+class _Bar$Change {
+  _Bar$Change._(
     this.foos,
     this.foo,
     this.driver,
@@ -190,8 +190,8 @@ class Bar$ {
   );
 }
 
-abstract class $Baz {
-  const $Baz();
+abstract class _$Baz {
+  const _$Baz();
 
   math.Point get prefixedField;
 
@@ -202,8 +202,8 @@ abstract class $Baz {
         prefixedField: prefixedField ?? this.prefixedField,
       );
 
-  Baz copyUsing(void Function(Baz$Change change) mutator) {
-    final change = Baz$Change._(
+  Baz copyUsing(void Function(_Baz$Change change) mutator) {
+    final change = _Baz$Change._(
       this.prefixedField,
     );
     mutator(change);
@@ -227,8 +227,8 @@ abstract class $Baz {
   }
 }
 
-class Baz$Change {
-  Baz$Change._(
+class _Baz$Change {
+  _Baz$Change._(
     this.prefixedField,
   );
 
@@ -241,4 +241,138 @@ class Baz$ {
     (prefixedFieldContainer) => prefixedFieldContainer.prefixedField,
     (prefixedFieldContainer, prefixedField) => prefixedFieldContainer.copyWith(prefixedField: prefixedField),
   );
+}
+
+abstract class _$FooNoCopyWith {
+  const _$FooNoCopyWith();
+
+  String get field;
+
+  FooNoCopyWith copyUsing(void Function(_FooNoCopyWith$Change change) mutator) {
+    final change = _FooNoCopyWith$Change._(
+      this.field,
+    );
+    mutator(change);
+    return FooNoCopyWith(
+      field: change.field,
+    );
+  }
+
+  @override
+  String toString() => "FooNoCopyWith(field: $field)";
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) => other is FooNoCopyWith && other.runtimeType == runtimeType && field == other.field;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode {
+    return field.hashCode;
+  }
+}
+
+class _FooNoCopyWith$Change {
+  _FooNoCopyWith$Change._(
+    this.field,
+  );
+
+  String field;
+}
+
+abstract class _$FooNoCopyUsing {
+  const _$FooNoCopyUsing();
+
+  String get field;
+
+  FooNoCopyUsing copyWith({
+    String? field,
+  }) =>
+      FooNoCopyUsing(
+        field: field ?? this.field,
+      );
+
+  @override
+  String toString() => "FooNoCopyUsing(field: $field)";
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) => other is FooNoCopyUsing && other.runtimeType == runtimeType && field == other.field;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode {
+    return field.hashCode;
+  }
+}
+
+// ignore: avoid_classes_with_only_static_members
+class FooNoCopyUsing$ {
+  static final field = Lens<FooNoCopyUsing, String>(
+    (fieldContainer) => fieldContainer.field,
+    (fieldContainer, field) => fieldContainer.copyWith(field: field),
+  );
+}
+
+abstract class _$FooNoCopy {
+  const _$FooNoCopy();
+
+  String get field;
+
+  @override
+  String toString() => "FooNoCopy(field: $field)";
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) => other is FooNoCopy && other.runtimeType == runtimeType && field == other.field;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode {
+    return field.hashCode;
+  }
+}
+
+abstract class _$FooNoLenses {
+  const _$FooNoLenses();
+
+  String get field;
+
+  FooNoLenses copyWith({
+    String? field,
+  }) =>
+      FooNoLenses(
+        field: field ?? this.field,
+      );
+
+  FooNoLenses copyUsing(void Function(_FooNoLenses$Change change) mutator) {
+    final change = _FooNoLenses$Change._(
+      this.field,
+    );
+    mutator(change);
+    return FooNoLenses(
+      field: change.field,
+    );
+  }
+
+  @override
+  String toString() => "FooNoLenses(field: $field)";
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) => other is FooNoLenses && other.runtimeType == runtimeType && field == other.field;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode {
+    return field.hashCode;
+  }
+}
+
+class _FooNoLenses$Change {
+  _FooNoLenses$Change._(
+    this.field,
+  );
+
+  String field;
 }
