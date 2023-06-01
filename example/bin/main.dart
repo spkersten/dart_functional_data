@@ -7,7 +7,11 @@ import 'types.dart' as my_types;
 part 'main.g.dart';
 
 // Only requirement is that it has a constructor with named arguments for all fields
-@FunctionalData()
+@FunctionalData(
+  // generateCopyWith should be ignored because generateLenses is set to true
+  generateCopyWith: false,
+  generateLenses: true,
+)
 class Foo extends $Foo {
   final String name;
   final int number;
@@ -31,7 +35,10 @@ class MyEquality<T> implements Equality {
   bool isValidKey(Object? o) => true;
 }
 
-@FunctionalData()
+@FunctionalData(
+  generateCopyUsing: false,
+  generateLenses: true,
+)
 class Bar extends $Bar {
   final Foo foo;
 
@@ -53,7 +60,9 @@ class Bar extends $Bar {
   const Bar.otherConstructor({required this.foo, this.foos = const [], this.driver = "", this.cache = null});
 }
 
-@FunctionalData()
+@FunctionalData(
+  generateCopy: false,
+)
 class Baz extends $Baz {
   final math.Point prefixedField;
 

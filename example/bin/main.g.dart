@@ -112,22 +112,6 @@ abstract class $Bar {
         cache: cache ?? this.cache,
       );
 
-  Bar copyUsing(void Function(Bar$Change change) mutator) {
-    final change = Bar$Change._(
-      this.foos,
-      this.foo,
-      this.driver,
-      this.cache,
-    );
-    mutator(change);
-    return Bar(
-      change.foos,
-      change.foo,
-      driver: change.driver,
-      cache: change.cache,
-    );
-  }
-
   @override
   String toString() => "Bar(foos: $foos, foo: $foo, driver: $driver, cache: $cache)";
 
@@ -151,20 +135,6 @@ abstract class $Bar {
     result = 37 * result + const Ignore().hash(cache);
     return result;
   }
-}
-
-class Bar$Change {
-  Bar$Change._(
-    this.foos,
-    this.foo,
-    this.driver,
-    this.cache,
-  );
-
-  List<Foo> foos;
-  Foo foo;
-  String driver;
-  String? cache;
 }
 
 // ignore: avoid_classes_with_only_static_members
@@ -195,23 +165,6 @@ abstract class $Baz {
 
   math.Point get prefixedField;
 
-  Baz copyWith({
-    math.Point? prefixedField,
-  }) =>
-      Baz(
-        prefixedField: prefixedField ?? this.prefixedField,
-      );
-
-  Baz copyUsing(void Function(Baz$Change change) mutator) {
-    final change = Baz$Change._(
-      this.prefixedField,
-    );
-    mutator(change);
-    return Baz(
-      prefixedField: change.prefixedField,
-    );
-  }
-
   @override
   String toString() => "Baz(prefixedField: $prefixedField)";
 
@@ -225,20 +178,4 @@ abstract class $Baz {
   int get hashCode {
     return prefixedField.hashCode;
   }
-}
-
-class Baz$Change {
-  Baz$Change._(
-    this.prefixedField,
-  );
-
-  math.Point prefixedField;
-}
-
-// ignore: avoid_classes_with_only_static_members
-class Baz$ {
-  static final prefixedField = Lens<Baz, math.Point>(
-    (prefixedFieldContainer) => prefixedFieldContainer.prefixedField,
-    (prefixedFieldContainer, prefixedField) => prefixedFieldContainer.copyWith(prefixedField: prefixedField),
-  );
 }
