@@ -8,8 +8,6 @@ part 'main.g.dart';
 
 // Only requirement is that it has a constructor with named arguments for all fields
 @FunctionalData(
-  // generateCopyWith should be ignored because generateLenses is set to true
-  generateCopyWith: false,
   generateLenses: true,
 )
 class Foo extends _$Foo {
@@ -36,7 +34,8 @@ class MyEquality<T> implements Equality {
 }
 
 @FunctionalData(
-  generateCopyUsing: false,
+  // generateCopyWith should be ignored because generateLenses is set to true
+  generateCopyWith: false,
   generateLenses: true,
 )
 class Bar extends _$Bar {
@@ -61,12 +60,39 @@ class Bar extends _$Bar {
 }
 
 @FunctionalData(
-  generateCopy: false,
+  generateLenses: true,
 )
 class Baz extends _$Baz {
   final math.Point prefixedField;
 
   const Baz({required this.prefixedField});
+}
+
+@FunctionalData(
+  generateCopyWith: false,
+)
+class FooNoCopyWith extends _$FooNoCopyWith {
+  final String field;
+
+  const FooNoCopyWith({required this.field});
+}
+
+@FunctionalData(
+  generateCopyUsing: false,
+)
+class FooNoCopyUsing extends _$FooNoCopyUsing {
+  final String field;
+
+  const FooNoCopyUsing({required this.field});
+}
+
+@FunctionalData(
+  generateCopy: false,
+)
+class FooNoCopy extends _$FooNoCopy {
+  final String field;
+
+  const FooNoCopy({required this.field});
 }
 
 main(List<String> arguments) {

@@ -112,9 +112,24 @@ abstract class _$Bar {
         cache: cache ?? this.cache,
       );
 
+  Bar copyUsing(void Function(_Bar$Change change) mutator) {
+    final change = _Bar$Change._(
+      this.foos,
+      this.foo,
+      this.driver,
+      this.cache,
+    );
+    mutator(change);
+    return Bar(
+      change.foos,
+      change.foo,
+      driver: change.driver,
+      cache: change.cache,
+    );
+  }
+
   @override
-  String toString() =>
-      "Bar(foos: $foos, foo: $foo, driver: $driver, cache: $cache)";
+  String toString() => "Bar(foos: $foos, foo: $foo, driver: $driver, cache: $cache)";
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -136,6 +151,20 @@ abstract class _$Bar {
     result = 37 * result + const Ignore().hash(cache);
     return result;
   }
+}
+
+class _Bar$Change {
+  _Bar$Change._(
+    this.foos,
+    this.foo,
+    this.driver,
+    this.cache,
+  );
+
+  List<Foo> foos;
+  Foo foo;
+  String driver;
+  String? cache;
 }
 
 // ignore: avoid_classes_with_only_static_members
@@ -166,19 +195,132 @@ abstract class _$Baz {
 
   math.Point get prefixedField;
 
+  Baz copyWith({
+    math.Point? prefixedField,
+  }) =>
+      Baz(
+        prefixedField: prefixedField ?? this.prefixedField,
+      );
+
+  Baz copyUsing(void Function(_Baz$Change change) mutator) {
+    final change = _Baz$Change._(
+      this.prefixedField,
+    );
+    mutator(change);
+    return Baz(
+      prefixedField: change.prefixedField,
+    );
+  }
+
   @override
   String toString() => "Baz(prefixedField: $prefixedField)";
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
-      other is Baz &&
-      other.runtimeType == runtimeType &&
-      prefixedField == other.prefixedField;
+      other is Baz && other.runtimeType == runtimeType && prefixedField == other.prefixedField;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode {
     return prefixedField.hashCode;
+  }
+}
+
+class _Baz$Change {
+  _Baz$Change._(
+    this.prefixedField,
+  );
+
+  math.Point prefixedField;
+}
+
+// ignore: avoid_classes_with_only_static_members
+class Baz$ {
+  static final prefixedField = Lens<Baz, math.Point>(
+    (prefixedFieldContainer) => prefixedFieldContainer.prefixedField,
+    (prefixedFieldContainer, prefixedField) => prefixedFieldContainer.copyWith(prefixedField: prefixedField),
+  );
+}
+
+abstract class _$FooNoCopyWith {
+  const _$FooNoCopyWith();
+
+  String get field;
+
+  FooNoCopyWith copyUsing(void Function(_FooNoCopyWith$Change change) mutator) {
+    final change = _FooNoCopyWith$Change._(
+      this.field,
+    );
+    mutator(change);
+    return FooNoCopyWith(
+      field: change.field,
+    );
+  }
+
+  @override
+  String toString() => "FooNoCopyWith(field: $field)";
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) => other is FooNoCopyWith && other.runtimeType == runtimeType && field == other.field;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode {
+    return field.hashCode;
+  }
+}
+
+class _FooNoCopyWith$Change {
+  _FooNoCopyWith$Change._(
+    this.field,
+  );
+
+  String field;
+}
+
+abstract class _$FooNoCopyUsing {
+  const _$FooNoCopyUsing();
+
+  String get field;
+
+  FooNoCopyUsing copyWith({
+    String? field,
+  }) =>
+      FooNoCopyUsing(
+        field: field ?? this.field,
+      );
+
+  @override
+  String toString() => "FooNoCopyUsing(field: $field)";
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) => other is FooNoCopyUsing && other.runtimeType == runtimeType && field == other.field;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode {
+    return field.hashCode;
+  }
+}
+
+abstract class _$FooNoCopy {
+  const _$FooNoCopy();
+
+  String get field;
+
+  @override
+  String toString() => "FooNoCopy(field: $field)";
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) => other is FooNoCopy && other.runtimeType == runtimeType && field == other.field;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode {
+    return field.hashCode;
   }
 }
