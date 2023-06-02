@@ -53,7 +53,7 @@ Future<String> _generateDataType(Element element, ConstantReader annotation, Bui
   final generateCopyWith = generateCopyParam ?? generateCopyWithParam ?? true;
   final generateCopyUsing = generateCopyParam ?? generateCopyUsingParam ?? true;
 
-  if (generateLenses == true && generateCopyWith == false) {
+  if (generateLenses && !generateCopyWith) {
     throw Exception('[$element]: generateLenses requires copyWith to be generated');
   }
 
@@ -84,7 +84,7 @@ Future<String> _generateDataType(Element element, ConstantReader annotation, Bui
   mergeSort<Pair<int, Field>>(fieldsWithIndex, compare: (a, b) => a.first.compareTo(b.first));
   final fields = fieldsWithIndex.map((e) => e.second).toList();
 
-  final generatedClasses = <String>[
+  final generatedClasses = [
     _generateDataClass(className, fields, generateCopyWith, generateCopyUsing),
     if (generateCopyUsing) _generateChangeClass(className, fields),
     if (generateLenses) _generateLenses(className, fields),
