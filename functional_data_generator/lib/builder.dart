@@ -41,11 +41,21 @@ Future<String> _generateDataType(Element element, ConstantReader annotation, Bui
     throw Exception('FunctionalData annotation must only be used on classes');
   }
 
-  final generateLenses = annotation.peek('generateLenses')?.literalValue as bool? ?? false;
-  final generateCopy = annotation.peek('generateCopy')?.literalValue as bool?;
-  final generateCopyWith =
-      (generateCopy ?? annotation.peek('generateCopyWith')?.literalValue as bool? ?? true) || generateLenses;
-  final generateCopyUsing = generateCopy ?? annotation.peek('generateCopyUsing')?.literalValue as bool? ?? true;
+  final generateCopyParam = annotation.peek('generateCopy')?.literalValue as bool?;
+  final generateCopyWithParam = annotation.peek('generateCopyWith')?.literalValue as bool?;
+  final generateCopyUsingParam = annotation.peek('generateCopyUsing')?.literalValue as bool?;
+
+  if (generateCopyParam != null && (generateCopyWithParam != null || generateCopyUsingParam != null)) {
+    throw Exception('[$element]: generateCopy cannot be defined if generateCopyWith or generateCopyUsing are defined');
+  }
+
+  final generateLenses = annotation.peek('generateLenses')?.literalValue as bool? ?? true;
+  final generateCopyWith = generateCopyParam ?? generateCopyWithParam ?? true;
+  final generateCopyUsing = generateCopyParam ?? generateCopyUsingParam ?? true;
+
+  if (generateLenses == true && generateCopyWith == false) {
+    throw Exception('[$element]: generateLenses requires copyWith to be generated');
+  }
 
   final className = element.name.replaceAll('\$', '');
 

@@ -10,17 +10,26 @@ class FunctionalData {
 
   /// Whether the generator should generate the copy methods.
   ///
-  /// When set, it overrides the settings of [generateCopyWith] and [generateCopyUsing].
+  /// Cannot be `false` when [generateLenses] is `true`
+  ///
+  /// Should not be defined together with [generateCopyWith] or [generateCopyUsing].
   final bool? generateCopy;
 
   /// Whether the generator should generate the copyWith method.
+  ///
+  /// Should not be defined together with [generateCopy].
+  ///
+  /// Cannot be `false` when [generateLenses] is `true`
   ///
   /// Defaults to `true`.
   final bool? generateCopyWith;
 
   /// Whether the generator should generate the copyUsing method.
   ///
-  /// When set to `true`, a helper class will also be generated (called `ClassName$Change`).
+  /// When set to `true`, a second data class used by the copyWith method
+  /// will also be generated (called `_ClassName$Change`).
+  ///
+  /// Should not be defined together with [generateCopy].
   ///
   /// Defaults to `true`.
   final bool? generateCopyUsing;
@@ -28,9 +37,9 @@ class FunctionalData {
   /// Whether the generator should generate the lenses class.
   ///
   /// The lenses class uses the `copyWith` method. So if [generateLenses] is set to `true`,
-  /// it will ignore [generateCopyWith] configuration and force generate the copyWith method.
+  /// the copyWith method needs to be generated (check [generateCopy] and [generateCopyWith]).
   ///
-  /// Defaults to `false`.
+  /// Defaults to `true`.
   final bool? generateLenses;
 }
 

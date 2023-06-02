@@ -306,6 +306,14 @@ abstract class _$FooNoCopyUsing {
   }
 }
 
+// ignore: avoid_classes_with_only_static_members
+class FooNoCopyUsing$ {
+  static final field = Lens<FooNoCopyUsing, String>(
+    (fieldContainer) => fieldContainer.field,
+    (fieldContainer, field) => fieldContainer.copyWith(field: field),
+  );
+}
+
 abstract class _$FooNoCopy {
   const _$FooNoCopy();
 
@@ -323,4 +331,48 @@ abstract class _$FooNoCopy {
   int get hashCode {
     return field.hashCode;
   }
+}
+
+abstract class _$FooNoLenses {
+  const _$FooNoLenses();
+
+  String get field;
+
+  FooNoLenses copyWith({
+    String? field,
+  }) =>
+      FooNoLenses(
+        field: field ?? this.field,
+      );
+
+  FooNoLenses copyUsing(void Function(_FooNoLenses$Change change) mutator) {
+    final change = _FooNoLenses$Change._(
+      this.field,
+    );
+    mutator(change);
+    return FooNoLenses(
+      field: change.field,
+    );
+  }
+
+  @override
+  String toString() => "FooNoLenses(field: $field)";
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) => other is FooNoLenses && other.runtimeType == runtimeType && field == other.field;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode {
+    return field.hashCode;
+  }
+}
+
+class _FooNoLenses$Change {
+  _FooNoLenses$Change._(
+    this.field,
+  );
+
+  String field;
 }
