@@ -7,7 +7,10 @@ import 'types.dart' as my_types;
 part 'main.g.dart';
 
 // Only requirement is that it has a constructor with named arguments for all fields
-@FunctionalData()
+@FunctionalData(
+  generateLenses: true,
+  generateCopyWith: true,
+)
 class Foo extends _$Foo {
   final String name;
   final int number;
@@ -31,7 +34,10 @@ class MyEquality<T> implements Equality {
   bool isValidKey(Object? o) => true;
 }
 
-@FunctionalData()
+@FunctionalData(
+  generateLenses: true,
+  generateCopyWith: true,
+)
 class Bar extends _$Bar {
   final Foo foo;
 
@@ -53,21 +59,30 @@ class Bar extends _$Bar {
   const Bar.otherConstructor({required this.foo, this.foos = const [], this.driver = "", this.cache = null});
 }
 
-@FunctionalData()
+@FunctionalData(
+  generateLenses: true,
+  generateCopyWith: true,
+)
 class Baz extends _$Baz {
   final math.Point prefixedField;
 
   const Baz({required this.prefixedField});
 }
 
-@FunctionalData(
-  generateCopyWith: false,
-  generateLenses: false,
-)
-class FooNoCopyWith extends _$FooNoCopyWith {
+@FunctionalData()
+class FooProjectConfig extends _$FooProjectConfig {
   final String field;
 
-  const FooNoCopyWith({required this.field});
+  const FooProjectConfig({required this.field});
+}
+
+@FunctionalData(
+  generateCopy: true,
+)
+class FooCopyOverrideProjectConfig extends _$FooCopyOverrideProjectConfig {
+  final String field;
+
+  const FooCopyOverrideProjectConfig({required this.field});
 }
 
 @FunctionalData(
@@ -81,21 +96,11 @@ class FooNoCopyUsing extends _$FooNoCopyUsing {
 
 @FunctionalData(
   generateCopy: false,
-  generateLenses: false,
 )
 class FooNoCopy extends _$FooNoCopy {
   final String field;
 
   const FooNoCopy({required this.field});
-}
-
-@FunctionalData(
-  generateLenses: false,
-)
-class FooNoLenses extends _$FooNoLenses {
-  final String field;
-
-  const FooNoLenses({required this.field});
 }
 
 main(List<String> arguments) {

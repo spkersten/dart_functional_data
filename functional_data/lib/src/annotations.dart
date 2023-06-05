@@ -7,7 +7,7 @@ class FunctionalData {
     this.generateCopyUsing,
     this.generateLenses,
   })  : assert(generateCopy == null || (generateCopyWith == null && generateCopyUsing == null)),
-        assert(generateLenses == false || (generateCopy != false && generateCopyWith != false));
+        assert(generateLenses != true || (generateCopy != false && generateCopyWith != false));
 
   /// Whether the generator should generate the copy methods.
   ///

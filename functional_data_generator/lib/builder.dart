@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:functional_data/functional_data.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:yaml/yaml.dart';
 
 Builder functionalData(BuilderOptions options) => SharedPartBuilder([FunctionalDataGenerator()], 'functional_data');
 
@@ -41,6 +44,7 @@ Future<String> _generateDataType(Element element, ConstantReader annotation, Bui
     throw Exception('FunctionalData annotation must only be used on classes');
   }
 
+  final generateLensesParam = annotation.peek('generateLenses')?.literalValue as bool?;
   final generateCopyParam = annotation.peek('generateCopy')?.literalValue as bool?;
   final generateCopyWithParam = annotation.peek('generateCopyWith')?.literalValue as bool?;
   final generateCopyUsingParam = annotation.peek('generateCopyUsing')?.literalValue as bool?;
@@ -49,9 +53,11 @@ Future<String> _generateDataType(Element element, ConstantReader annotation, Bui
     throw Exception('[$element]: generateCopy cannot be defined if generateCopyWith or generateCopyUsing are defined');
   }
 
-  final generateLenses = annotation.peek('generateLenses')?.literalValue as bool? ?? true;
-  final generateCopyWith = generateCopyParam ?? generateCopyWithParam ?? true;
-  final generateCopyUsing = generateCopyParam ?? generateCopyUsingParam ?? true;
+  final projectOptions = _loadProjectOptions();
+
+  final generateLenses = generateLensesParam ?? projectOptions.generateLenses ?? true;
+  final generateCopyWith = generateCopyParam ?? generateCopyWithParam ?? projectOptions.generateCopyWith ?? true;
+  final generateCopyUsing = generateCopyParam ?? generateCopyUsingParam ?? projectOptions.generateCopyUsing ?? true;
 
   if (generateLenses && !generateCopyWith) {
     throw Exception('[$element]: generateLenses requires copyWith to be generated');
@@ -91,6 +97,16 @@ Future<String> _generateDataType(Element element, ConstantReader annotation, Bui
   ];
 
   return generatedClasses.join(' ');
+}
+
+_ProjectOptions _loadProjectOptions() {
+  final optionsFile = File('functional_data_options.yaml');
+  final yaml = (optionsFile.existsSync()) ? loadYaml(optionsFile.readAsStringSync()) : null;
+  if (yaml is YamlMap) {
+    return _ProjectOptions.fromYamlMap(yaml);
+  } else {
+    return const _ProjectOptions();
+  }
 }
 
 String _generateDataClass(String className, List<Field> fields, bool generateCopyWith, bool generateCopyUsing) {
@@ -188,6 +204,37 @@ String _generateHash(Field f) {
   } else {
     return '${f.name}.hashCode';
   }
+}
+
+class _ProjectOptions {
+  const _ProjectOptions({
+    this.generateCopyWith,
+    this.generateCopyUsing,
+    this.generateLenses,
+  }) : assert(
+          !(generateLenses == true && generateCopyWith == false),
+          'generateLenses requires copyWith to be generated',
+        );
+
+  factory _ProjectOptions.fromYamlMap(YamlNode yaml) => (yaml is YamlMap)
+      ? _ProjectOptions(
+          generateCopyWith: _getBool(yaml['generateCopyWith']),
+          generateCopyUsing: _getBool(yaml['generateCopyUsing']),
+          generateLenses: _getBool(yaml['generateLenses']),
+        )
+      : const _ProjectOptions();
+
+  final bool? generateCopyWith;
+  final bool? generateCopyUsing;
+  final bool? generateLenses;
+}
+
+bool? _getBool(Object? value) {
+  if (value == null || value is! bool) {
+    return null;
+  }
+
+  return value;
 }
 
 class Field {
