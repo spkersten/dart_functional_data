@@ -2,7 +2,7 @@
 
 ![Build](https://github.com/spkersten/dart_functional_data/actions/workflows/master_validation.yml/badge.svg?branch=master)
 
-Simple and non-intrusive code generator for boilerplate of data types. The package generates a simple mixin with 
+Simple and non-intrusive code generator for boilerplate of data types. The package generates a simple mixin with
 `operator==`, `hashCode`, `copyWith`, `toString`, as well as lenses.
 
 ## Boiler plate
@@ -15,11 +15,11 @@ only have to provide a constructor with named arguments for all fields and exten
 class Person extends $Person {
   final String name;
   final int age;
-  
+
   const Person({this.name, this.age});
-  
+
   const Person.anonymous() : this(name: "John Doe", age: null);
-  
+
   int get ageInDays => numberOfDaysInMostYears * age;
 
   static const numberOfDaysInMostYears = 356;
@@ -56,7 +56,7 @@ using `then`.
 class Course extends $Course {
   final String name;
   final List<Person> students;
-  
+
   const Course({this.students});
 }
 
@@ -133,4 +133,31 @@ void main() {
   print(driversNumber.of(bar).value);
   // 101
 }
+```
+
+## Code generation configuration
+### Class level configuration
+
+To specify which features should be generated for the class, you can send arguments to `@FunctionalData` generator.
+
+Example:
+```dart
+@FunctionalData(
+  generateCopy: false,
+  generateLenses: false,
+)
+class Foo extends _$Foo {}
+```
+
+### Project level configuration
+
+To specify which features should be generated for you whole project, create a file called `functional_data_options.yaml`
+in the root of your project.
+Class specific arguments will override the project level configuration.
+
+Example with all possible configurations:
+```yaml
+generateCopyWith: false
+generateCopyUsing: false
+generateLenses: false
 ```

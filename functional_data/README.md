@@ -90,32 +90,6 @@ final updatedCourse = Course(name: programming.name, students: updatedStudents);
 
 This is much less readable and error prone. Imagine what happens when one of the classes gains a field.
 
-### Class level configuration
-
-To specify which features should be generated for the class, you can send arguments to `@FunctionalData` generator.
-
-Example:
-```dart
-@FunctionalData(
-  generateCopy: false,
-  generateLenses: false,
-)
-class Foo extends _$Foo {}
-```
-
-### Project level configuration
-
-To specify which features should be generated for you whole project, create a file called `functional_data_options.yaml`
-in the root of your project.
-Class specific arguments will override the project level configuration.
-
-Example with all possible configurations:
-```yaml
-generateCopyWith: false
-generateCopyUsing: false
-generateLenses: false
-```
-
 ### Full example:
 
 ```dart
@@ -170,4 +144,31 @@ void main() {
   print(driversNumber.of(bar).value);
   // 101
 }
+```
+
+## Code generation configuration
+### Class level configuration
+
+To specify which features should be generated for the class, you can send arguments to `@FunctionalData` generator.
+
+Example:
+```dart
+@FunctionalData(
+  generateCopy: false,
+  generateLenses: false,
+)
+class Foo extends _$Foo {}
+```
+
+### Project level configuration
+
+To specify which features should be generated for you whole project, create a file called `functional_data_options.yaml`
+in the root of your project.
+Class specific arguments will override the project level configuration.
+
+Example with all possible configurations:
+```yaml
+generateCopyWith: false
+generateCopyUsing: false
+generateLenses: false
 ```
