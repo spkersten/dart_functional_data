@@ -243,27 +243,28 @@ class Baz$ {
   );
 }
 
-abstract class _$FooNoCopyWith {
-  const _$FooNoCopyWith();
+abstract class _$FooProjectConfig {
+  const _$FooProjectConfig();
 
   String get field;
 
-  FooNoCopyWith copyUsing(void Function(_FooNoCopyWith$Change change) mutator) {
-    final change = _FooNoCopyWith$Change._(
+  FooProjectConfig copyUsing(void Function(_FooProjectConfig$Change change) mutator) {
+    final change = _FooProjectConfig$Change._(
       this.field,
     );
     mutator(change);
-    return FooNoCopyWith(
+    return FooProjectConfig(
       field: change.field,
     );
   }
 
   @override
-  String toString() => "FooNoCopyWith(field: $field)";
+  String toString() => "FooProjectConfig(field: $field)";
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(Object other) => other is FooNoCopyWith && other.runtimeType == runtimeType && field == other.field;
+  bool operator ==(Object other) =>
+      other is FooProjectConfig && other.runtimeType == runtimeType && field == other.field;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -272,8 +273,53 @@ abstract class _$FooNoCopyWith {
   }
 }
 
-class _FooNoCopyWith$Change {
-  _FooNoCopyWith$Change._(
+class _FooProjectConfig$Change {
+  _FooProjectConfig$Change._(
+    this.field,
+  );
+
+  String field;
+}
+
+abstract class _$FooCopyOverrideProjectConfig {
+  const _$FooCopyOverrideProjectConfig();
+
+  String get field;
+
+  FooCopyOverrideProjectConfig copyWith({
+    String? field,
+  }) =>
+      FooCopyOverrideProjectConfig(
+        field: field ?? this.field,
+      );
+
+  FooCopyOverrideProjectConfig copyUsing(void Function(_FooCopyOverrideProjectConfig$Change change) mutator) {
+    final change = _FooCopyOverrideProjectConfig$Change._(
+      this.field,
+    );
+    mutator(change);
+    return FooCopyOverrideProjectConfig(
+      field: change.field,
+    );
+  }
+
+  @override
+  String toString() => "FooCopyOverrideProjectConfig(field: $field)";
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) =>
+      other is FooCopyOverrideProjectConfig && other.runtimeType == runtimeType && field == other.field;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode {
+    return field.hashCode;
+  }
+}
+
+class _FooCopyOverrideProjectConfig$Change {
+  _FooCopyOverrideProjectConfig$Change._(
     this.field,
   );
 
@@ -284,13 +330,6 @@ abstract class _$FooNoCopyUsing {
   const _$FooNoCopyUsing();
 
   String get field;
-
-  FooNoCopyUsing copyWith({
-    String? field,
-  }) =>
-      FooNoCopyUsing(
-        field: field ?? this.field,
-      );
 
   @override
   String toString() => "FooNoCopyUsing(field: $field)";
@@ -304,14 +343,6 @@ abstract class _$FooNoCopyUsing {
   int get hashCode {
     return field.hashCode;
   }
-}
-
-// ignore: avoid_classes_with_only_static_members
-class FooNoCopyUsing$ {
-  static final field = Lens<FooNoCopyUsing, String>(
-    (fieldContainer) => fieldContainer.field,
-    (fieldContainer, field) => fieldContainer.copyWith(field: field),
-  );
 }
 
 abstract class _$FooNoCopy {
@@ -331,48 +362,4 @@ abstract class _$FooNoCopy {
   int get hashCode {
     return field.hashCode;
   }
-}
-
-abstract class _$FooNoLenses {
-  const _$FooNoLenses();
-
-  String get field;
-
-  FooNoLenses copyWith({
-    String? field,
-  }) =>
-      FooNoLenses(
-        field: field ?? this.field,
-      );
-
-  FooNoLenses copyUsing(void Function(_FooNoLenses$Change change) mutator) {
-    final change = _FooNoLenses$Change._(
-      this.field,
-    );
-    mutator(change);
-    return FooNoLenses(
-      field: change.field,
-    );
-  }
-
-  @override
-  String toString() => "FooNoLenses(field: $field)";
-
-  @override
-  // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(Object other) => other is FooNoLenses && other.runtimeType == runtimeType && field == other.field;
-
-  @override
-  // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode {
-    return field.hashCode;
-  }
-}
-
-class _FooNoLenses$Change {
-  _FooNoLenses$Change._(
-    this.field,
-  );
-
-  String field;
 }

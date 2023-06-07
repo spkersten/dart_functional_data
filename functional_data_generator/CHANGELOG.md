@@ -1,3 +1,10 @@
+## 2.1.0
+
+- Support for project level configuration. Supported configs:
+  -  generateCopyWith
+  -  generateCopyUsing
+  -  generateLenses
+
 ## 2.0.0
 
 - Update to dart 3

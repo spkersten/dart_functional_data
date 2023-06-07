@@ -1,3 +1,8 @@
+## 1.1.1
+
+- Relaxed annotation assert so it does not assume that generateLenses being null is the same as being true.
+This is required if the generator wants to pick different defaults, e.g. from project configuration.
+
 ## 1.1.0
 
 - Update to dart 3
