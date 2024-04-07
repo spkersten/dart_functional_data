@@ -161,3 +161,16 @@ generateCopyWith: false
 generateCopyUsing: false
 generateLenses: false
 ```
+
+## Contributing
+
+### Setup
+
+This project uses [`melos`](https://melos.invertase.dev) to manage all the packages inside this repo.
+
+1. Install melos via the top level workspace `dart pub get`.
+2. Setup melos to point to the dependencies in your local folder: `melos bootstrap`
+
+**Testing the Code generator**:
+
+- Either run `melos generate:dart` in the top level folder, or `dart run build_runner build` in the `example` folder.
