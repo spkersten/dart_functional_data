@@ -1,0 +1,6 @@
+name: functional_data_workspace
+
+environment:
+  sdk: '>=2.19.0 <3.0.0'
+dev_dependencies:
+  melos: ^3.1.0
