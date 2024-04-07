@@ -1,3 +1,8 @@
+## 2.2.0
+
+- Sets Dart SDK constraint to `>=2.19.0 <4.0.0`
+- Update analyzer dependency to `>=2.0.0 <7.0.0`
+
 ## 2.1.0
 
 - Support for project level configuration. Supported configs:

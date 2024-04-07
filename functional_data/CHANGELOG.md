@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Sets Dart SDK constraint to `>=2.19.0 <4.0.0`
+
 ## 1.1.1
 
 - Relaxed annotation assert so it does not assume that generateLenses being null is the same as being true.
