@@ -129,8 +129,7 @@ abstract class _$Bar {
   }
 
   @override
-  String toString() =>
-      "Bar(foos: $foos, foo: $foo, driver: $driver, cache: $cache)";
+  String toString() => "Bar(foos: $foos, foo: $foo, driver: $driver, cache: $cache)";
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -219,9 +218,7 @@ abstract class _$Baz {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
-      other is Baz &&
-      other.runtimeType == runtimeType &&
-      prefixedField == other.prefixedField;
+      other is Baz && other.runtimeType == runtimeType && prefixedField == other.prefixedField;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -242,8 +239,7 @@ class _Baz$Change {
 class Baz$ {
   static final prefixedField = Lens<Baz, math.Point>(
     (prefixedFieldContainer) => prefixedFieldContainer.prefixedField,
-    (prefixedFieldContainer, prefixedField) =>
-        prefixedFieldContainer.copyWith(prefixedField: prefixedField),
+    (prefixedFieldContainer, prefixedField) => prefixedFieldContainer.copyWith(prefixedField: prefixedField),
   );
 }
 
@@ -252,8 +248,7 @@ abstract class _$FooProjectConfig {
 
   String get field;
 
-  FooProjectConfig copyUsing(
-      void Function(_FooProjectConfig$Change change) mutator) {
+  FooProjectConfig copyUsing(void Function(_FooProjectConfig$Change change) mutator) {
     final change = _FooProjectConfig$Change._(
       this.field,
     );
@@ -269,9 +264,7 @@ abstract class _$FooProjectConfig {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
-      other is FooProjectConfig &&
-      other.runtimeType == runtimeType &&
-      field == other.field;
+      other is FooProjectConfig && other.runtimeType == runtimeType && field == other.field;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -300,8 +293,7 @@ abstract class _$FooCopyOverrideProjectConfig {
         field: field ?? this.field,
       );
 
-  FooCopyOverrideProjectConfig copyUsing(
-      void Function(_FooCopyOverrideProjectConfig$Change change) mutator) {
+  FooCopyOverrideProjectConfig copyUsing(void Function(_FooCopyOverrideProjectConfig$Change change) mutator) {
     final change = _FooCopyOverrideProjectConfig$Change._(
       this.field,
     );
@@ -317,9 +309,7 @@ abstract class _$FooCopyOverrideProjectConfig {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
-      other is FooCopyOverrideProjectConfig &&
-      other.runtimeType == runtimeType &&
-      field == other.field;
+      other is FooCopyOverrideProjectConfig && other.runtimeType == runtimeType && field == other.field;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -346,10 +336,7 @@ abstract class _$FooNoCopyUsing {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(Object other) =>
-      other is FooNoCopyUsing &&
-      other.runtimeType == runtimeType &&
-      field == other.field;
+  bool operator ==(Object other) => other is FooNoCopyUsing && other.runtimeType == runtimeType && field == other.field;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -368,10 +355,7 @@ abstract class _$FooNoCopy {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(Object other) =>
-      other is FooNoCopy &&
-      other.runtimeType == runtimeType &&
-      field == other.field;
+  bool operator ==(Object other) => other is FooNoCopy && other.runtimeType == runtimeType && field == other.field;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
