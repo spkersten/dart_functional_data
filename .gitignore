@@ -29,3 +29,6 @@
 build/
 
 pubspec_overrides.yaml
+
+# ASDF
+.tool-versions

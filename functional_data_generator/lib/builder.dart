@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:functional_data/functional_data.dart';
@@ -12,13 +12,13 @@ Builder functionalData(BuilderOptions options) => SharedPartBuilder([FunctionalD
 
 class FunctionalDataGenerator extends GeneratorForAnnotation<FunctionalData> {
   @override
-  Future<String> generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) =>
+  Future<String> generateForAnnotatedElement(Element2 element, ConstantReader annotation, BuildStep buildStep) =>
       _generateDataType(element, annotation, buildStep);
 }
 
 String? _getCustomEquality(List<ElementAnnotation> annotations) {
-  final annotation = annotations.firstWhereOrNull(
-      (a) => a.computeConstantValue()?.type?.getDisplayString(withNullability: false) == 'CustomEquality');
+  final annotation =
+      annotations.firstWhereOrNull((a) => a.computeConstantValue()?.type?.getDisplayString() == 'CustomEquality');
   if (annotation != null) {
     final source = annotation.toSource();
     final customEquality = source.substring('@CustomEquality('.length, source.length - 1).replaceAll('?', '');
@@ -39,8 +39,8 @@ class Pair<T, S> {
   final S second;
 }
 
-Future<String> _generateDataType(Element element, ConstantReader annotation, BuildStep buildStep) async {
-  if (element is! ClassElement) {
+Future<String> _generateDataType(Element2 element, ConstantReader annotation, BuildStep buildStep) async {
+  if (element is! ClassElement2) {
     throw Exception('FunctionalData annotation must only be used on classes');
   }
 
@@ -63,25 +63,26 @@ Future<String> _generateDataType(Element element, ConstantReader annotation, Bui
     throw Exception('[$element]: generateLenses requires copyWith to be generated');
   }
 
-  final className = element.name.replaceAll('\$', '');
+  final className = (element.name3 ?? '').replaceAll('\$', '');
 
   final classElement = element;
 
   // The one that can be used to specify every field
-  final genericConstructor = classElement.constructors.firstWhere((element) => element.name.isEmpty);
-  final positionalFields = genericConstructor.parameters.where((p) => p.isPositional).map((p) => p.name).toList();
+  final genericConstructor = classElement.constructors2.firstWhere((element) => element.name3 == 'new');
+  final positionalFields =
+      genericConstructor.formalParameters.where((p) => p.isPositional).map((p) => p.name3).toList();
 
   final fieldsWithIndex =
-      await Future.wait(classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) async {
-    final declaration = await buildStep.resolver.astNodeFor(f) as VariableDeclaration?;
+      await Future.wait(classElement.fields2.where((f) => !f.isSynthetic && !f.isStatic).map((f) async {
+    final declaration = await buildStep.resolver.astNodeFor(f.firstFragment) as VariableDeclaration?;
     final declarationList = declaration?.parent as VariableDeclarationList?;
-    final positionalIndex = positionalFields.indexOf(f.name);
+    final positionalIndex = positionalFields.indexOf(f.name3);
     return Pair(
       positionalIndex == -1 ? 9999 : positionalIndex,
       Field(
-        f.name,
+        f.name3 ?? '',
         declarationList?.type?.toSource() ?? 'dynamic',
-        _getCustomEquality(f.metadata),
+        _getCustomEquality(f.metadata2.annotations),
         isPositional: positionalIndex != -1,
       ),
     );
