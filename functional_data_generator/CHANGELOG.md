@@ -1,3 +1,7 @@
+## 2.2.1
+
+- Update analyzer dependency to `^7.4.0`
+
 ## 2.2.0
 
 - Sets Dart SDK constraint to `>=2.19.0 <4.0.0`
