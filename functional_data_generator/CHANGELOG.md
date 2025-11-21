@@ -1,3 +1,7 @@
+## 2.2.2
+
+- Update analyzer dependency to `^8.0.0`
+
 ## 2.2.1
 
 - Update analyzer dependency to `^7.4.0`

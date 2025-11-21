@@ -1,5 +1,5 @@
 name: functional_data_generator
-version: 2.2.1
+version: 2.2.2
 description: >-
   Simple and non-intrusive code generator for boilerplate of data types.
 homepage: https://github.com/spkersten/dart_functional_data
@@ -8,13 +8,12 @@ environment:
   sdk: '>=2.19.0 <4.0.0'
 
 dependencies:
-  analyzer: '^7.4.0'
-  build: ^3.0.0
+  analyzer: '^8.0.0'
+  build: ^4.0.0
   collection: ^1.15.0
   functional_data: ^1.1.1
-  source_gen: ^3.1.0
+  source_gen: ^4.0.0
   yaml: ^3.1.2
 
 dev_dependencies:
-  build_resolvers: "^3.0.2"
-  build_runner: ^2.2.0
+  build_runner: ^2.10.4
