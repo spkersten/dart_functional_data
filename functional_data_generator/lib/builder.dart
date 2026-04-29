@@ -72,7 +72,7 @@ Future<String> _generateDataType(Element element, ConstantReader annotation, Bui
   final positionalFields = genericConstructor.formalParameters.where((p) => p.isPositional).map((p) => p.name).toList();
 
   final fieldsWithIndex =
-      await Future.wait(classElement.fields.where((f) => !f.isSynthetic && !f.isStatic).map((f) async {
+      await Future.wait(classElement.fields.where((f) => f.nonSynthetic == f && !f.isStatic).map((f) async {
     final declaration = await buildStep.resolver.astNodeFor(f.firstFragment) as VariableDeclaration?;
     final declarationList = declaration?.parent as VariableDeclarationList?;
     final positionalIndex = positionalFields.indexOf(f.name);
