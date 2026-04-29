@@ -1,3 +1,7 @@
+## 2.2.3
+
+- Update analyzer dependency to `>=8.1.1 <13.0.0`
+
 ## 2.2.2
 
 - Update analyzer dependency to `^8.0.0`
